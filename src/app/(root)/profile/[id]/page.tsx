@@ -28,7 +28,7 @@ const ProfilePage = async ({ params }: Props) => {
   // * User, Whose Profile Is Opened
   const mongoUser = await fetchUser("", params.id || "");
   if (!mongoUser) return profileData;
-  if (mongoUser?.["onboarded"] === false) return redirect("/onboarding");
+  if (!mongoUser?.["onboarded"]) return redirect("/onboarding");
 
   // * Current-User
   const user = await currentUser();

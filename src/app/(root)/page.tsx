@@ -23,7 +23,7 @@ export default async function Home() {
         <ReelCard />
       </ReelsContainer>
       <h1 className="text-2xl font-semibold mt-7">Threads</h1>
-      <main className="">
+      <div className="w-full">
         {/* server-side component  */}
         <ThreadsContainer
           isNextPage={isNextPage}
@@ -60,7 +60,7 @@ export default async function Home() {
             );
           })}
         </ThreadsContainer>
-      </main>
+      </div>
     </div>
   );
 }

@@ -30,3 +30,7 @@ body {
   scrollbar-width: none; /* Remove scrollbar in Firefox */
   -ms-overflow-style: none; /* Remove scrollbar in IE and Edge */
 }
+
+.hide{
+  display: none;
+}

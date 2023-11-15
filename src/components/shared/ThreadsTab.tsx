@@ -1,5 +1,5 @@
 import { fetchUserPosts } from "@/lib/actions/thread.actions";
-import ThreadCard from "../cards/ThreadCard";
+import ThreadCard from "../cards/ThreadCard/ThreadCard";
 import { ThreadFormData } from "@/lib/validations/thread";
 import { IUserSchema } from "@/lib/models/user.model";
 

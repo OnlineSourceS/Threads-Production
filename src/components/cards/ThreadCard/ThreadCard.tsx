@@ -28,9 +28,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+} from "../../ui/dialog";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { IThreadSchema } from "@/lib/models/thread.model";
 import { isLikedByTheUser } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -42,12 +42,14 @@ import {
   RiSendPlaneFill,
 } from "react-icons/ri";
 import { MediaType } from "@/utils/types";
-import ReplyCard from "./ReplyCard";
+import ReplyCard from "../ReplyCard";
 import { FaTruckLoading } from "react-icons/fa";
 import { Loader, Loader2, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
+import threadReducer, { ActionType } from "./reducer";
+import MediaContent from "./MediaContent";
 interface ThreadProps {
-  readonly currentUser: IUserSchema;
+  readonly currentUser: IUserSchema | null;
   readonly threadId: ObjectId;
   readonly author: IUserSchema; // Assuming author is of type string
   readonly threadText: string;
@@ -58,119 +60,6 @@ interface ThreadProps {
   readonly likes?: ObjectId[];
   readonly media?: MediaType[];
 }
-// Define action types
-type ActionType =
-  | "TOGGLE_THREAD_REPLY_FORM"
-  | "TOGGLE_THREAD_REPLIES"
-  | "TOGGLE_SHOWMORE_MEDIA"
-  | "TOGGLE_LIKES_COUNT";
-
-// Define the initial state interface
-interface State {
-  isVisibleReplyForm: boolean;
-  isVisibleReplies: boolean;
-  isShownMoreMedia: boolean;
-  isLiked: boolean;
-}
-
-const reducer = (state: State, action: { type: ActionType }): State => {
-  switch (action.type) {
-    case "TOGGLE_THREAD_REPLIES":
-      return { ...state, isVisibleReplies: !state.isVisibleReplies };
-    case "TOGGLE_THREAD_REPLY_FORM":
-      return { ...state, isVisibleReplyForm: !state.isVisibleReplyForm };
-    case "TOGGLE_LIKES_COUNT":
-      return {
-        ...state,
-        isLiked: !state.isLiked,
-      };
-    case "TOGGLE_SHOWMORE_MEDIA":
-      return {
-        ...state,
-        isShownMoreMedia: !state.isShownMoreMedia,
-      };
-    default:
-      return state;
-  }
-};
-
-const MediaContent = ({
-  media,
-  dispatch,
-  isShownMoreMedia,
-}: {
-  media: MediaType[];
-  dispatch: Dispatch<{
-    type: ActionType;
-  }>;
-  isShownMoreMedia: boolean;
-}) => {
-  if (media.length === 0) {
-    return null;
-  }
-
-  const toggleMedia = () => dispatch({ type: "TOGGLE_SHOWMORE_MEDIA" });
-  const isMoreMediaRemaining = !isShownMoreMedia && media.length - 2 > 0;
-
-  return (
-    <>
-      <div className="media py-3 ">
-        <div
-          className={`flex justify-start gap-3 flex-wrap overflow-y-hidden transition-all ${
-            isShownMoreMedia || media.length - 2 === 0 ? "" : "h-[10rem]"
-          }`}
-        >
-          {media
-            ? media.map((image) => (
-                <div
-                  className={`mediaImage ${
-                    media.length === 1 ? "w-full" : "w-[44%]"
-                  }`}
-                  key={image.url}
-                >
-                  <a href={image.url} target="_blank">
-                    <img
-                      src={image.url}
-                      className="opacity-90 hover:opacity-80 rounded-lg cursor-pointer w-full object-contain"
-                      alt="Media Image"
-                    />
-                  </a>
-                </div>
-              ))
-            : null}
-        </div>
-        <div
-          className="rotate-180 flex justify-center items-center gap-3"
-          style={{
-            boxShadow: isShownMoreMedia ? "" : "5px 20px  30px 20px #17162C",
-          }}
-        >
-          {isMoreMediaRemaining ? (
-            <span className="rotate-180 text-center text-xl">
-              {media.length - 2}+ More
-            </span>
-          ) : null}
-          <button
-            onClick={toggleMedia}
-            className="ml-2 bg-gray-700 rotate-180 p-1 px-4 rounded-xl my-3 transition-all hover:bg-gray-600"
-          >
-            {isShownMoreMedia ? (
-              <div className="flex gap-1 items-center">
-                <span>Show Less</span>
-                <GoChevronUp />
-              </div>
-            ) : (
-              <div className="flex gap-1 items-center">
-                <span>Show More</span>
-                <GoChevronDown />
-              </div>
-            )}
-          </button>
-        </div>
-      </div>
-    </>
-  );
-};
 
 const ThreadCard = ({
   threadId,
@@ -189,7 +78,7 @@ const ThreadCard = ({
   const path = usePathname();
   const shareLinkInputRef = useRef<HTMLInputElement | null>(null);
   const [state, dispatch] = useReducer(
-    reducer, // Define the initial state
+    threadReducer, // Define the initial state
     {
       isVisibleReplyForm: false,
       isVisibleReplies: false,
@@ -213,6 +102,7 @@ const ThreadCard = ({
 
     setLoading(true);
     currentUser?.["_id"];
+
     await postThreadReply({
       // @ts-ignore
       threadId,
@@ -221,12 +111,23 @@ const ThreadCard = ({
       userId: currentUser?.["_id"],
       path,
     });
+
+    toast("Shared Your Thoughts!");
+
+    if (!state.isVisibleReplies) {
+      dispatch({ type: "TOGGLE_THREAD_REPLIES" });
+    }
     setLoading(false);
     // * Clearing the value/text of input-elment
     // e.currentTarget.childNodes[0].childNodes[1].value = "";
   }
   const handleLikes = async () => {
+    if (!state.isLiked) {
+      toast.success("Feedback Shared With Author");
+    }
+
     dispatch({ type: "TOGGLE_LIKES_COUNT" });
+
     await updateLikes(currentUser?.["_id"], threadId, path);
     console.log(currentUser?._id, threadId, "hteuh", state.isLiked);
   };
@@ -361,7 +262,7 @@ const ThreadCard = ({
                 media={media}
                 dispatch={dispatch}
                 isShownMoreMedia={state.isShownMoreMedia}
-              />
+              ></MediaContent>
             ) : null}
             <div className="flex items-center mt-2 gap-2">
               <span

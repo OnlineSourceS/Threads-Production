@@ -15,7 +15,6 @@ const ReelVideoCard: React.FC<ReelVideoCardProps> = ({ videoSrc }) => {
         src={videoSrc}
         loop
         className="h-full opacity-90 w-full object-cover rounded-lg"
-        // controls
       />
       <div className="overlay absolute top-0 left-0 h-full w-full">
         <div className="text-white flex flex-col justify-between w-full h-full">
@@ -30,7 +29,7 @@ const ReelVideoCard: React.FC<ReelVideoCardProps> = ({ videoSrc }) => {
               <div className="icon bg-gray-700/10 transition hover:bg-gray-400/30 p-3  rounded-full">
                 <ThumbsUp size={23} className="" />
               </div>
-              <span className="text-xs ">Like</span>
+              <span className="text-xs">Like</span>
             </button>
             <button className="flex flex-col items-center gap-1 opacity-90 ">
               <div className="icon bg-gray-700/10 transition hover:bg-gray-400/30 p-3  rounded-full">

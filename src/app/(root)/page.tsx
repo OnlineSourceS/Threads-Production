@@ -1,17 +1,19 @@
 import ThreadsContainer from "@/components/ThreadsContainer";
 
 import ReelCard from "@/components/cards/ReelCard";
-import ThreadCard from "@/components/cards/ThreadCard";
+import ThreadCard from "@/components/cards/ThreadCard/ThreadCard";
 import ReelsContainer from "@/components/containers/ReelsContainer";
 import { fetchThreads } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 
-export default async function Home() {
+export default async function Home(props) {
   const user = await currentUser();
   if (!user) return null;
   const mongoUser = await fetchUser(user?.id);
-  const { threads, isNextPage, totalThreadsCount } = await fetchThreads(1, 5);
+  const { threads, isNextPage, totalThreadsCount } = JSON.parse(
+    JSON.stringify(await fetchThreads(Number(props.searchParams.page ?? 1)))
+  );
 
   return (
     <div className="my-8 px-2 overflow-hidden ">
@@ -28,38 +30,11 @@ export default async function Home() {
         <ThreadsContainer
           isNextPage={isNextPage}
           totalThreadsCount={totalThreadsCount}
-        >
-          {threads.map((thread, idx) => {
-            const {
-              author,
-              _id,
-              threadText,
-              parentId,
-              community,
-              children,
-              likes,
-              media,
-            } = JSON.parse(JSON.stringify(thread));
-
-            return threads.length ? (
-              /* client-side component */
-              <ThreadCard
-                key={_id}
-                currentUser={mongoUser as object}
-                threadId={_id}
-                author={author}
-                threadText={threadText}
-                parentId={parentId}
-                community={community || null}
-                replies={children}
-                likes={likes}
-                media={media}
-              />
-            ) : (
-              <>No Threads Found</>
-            );
-          })}
-        </ThreadsContainer>
+          threads={threads}
+          mongoUser={mongoUser}
+          prop={props}
+          page={Number(props.searchParams.page)}
+        ></ThreadsContainer>
       </div>
     </div>
   );

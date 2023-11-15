@@ -58,8 +58,8 @@ const ProfileHeader = ({ mongoUser, clerkUser, currentMongoUser }: Props) => {
   };
 
   async function handleAddFriend(e) {
-    if (currentMongoUser?._id === mongoUser?._id)
-      return toast.error("You Can't Follow Yourself");
+    const isYourOwnProfile = currentMongoUser?._id === mongoUser?._id;
+    if (isYourOwnProfile) return toast.error("You Can't Follow Yourself");
     await sendFriendRequest(currentMongoUser?._id, mongoUser?._id, path);
   }
 

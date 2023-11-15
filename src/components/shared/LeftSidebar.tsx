@@ -24,8 +24,8 @@ const LeftSidebar = ({ mongoUser }: Props) => {
           return (
             <div key={idx}>
               <Link
-                className={`flex gap-2 px-6 rounded-lg py-4 transition-all ease-in cursor-pointer ${
-                  isActive ? "bg-[#867DFA] " : ""
+                className={`flex text-gray-200 gap-2 px-6  rounded-lg py-4 transition-all ease-in cursor-pointer ${
+                  isActive ? "bg-[#867DFA]" : "hover:text-white"
                 }`}
                 href={
                   link.label === "Profile"

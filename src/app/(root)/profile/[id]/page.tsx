@@ -1,9 +1,4 @@
-import { Button } from "@/components/ui/button";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
@@ -14,15 +9,16 @@ import ThreadsTab from "@/components/shared/ThreadsTab";
 import FriendRequestCard from "@/components/cards/FriendRequestCard";
 import {
   FriendRequest,
+  getFriendRequest,
   getPendingReceivedFriendRequests,
 } from "@/lib/actions/friendRequest.actions";
-import { IFriendRequestSchema } from "@/lib/models/friendRequest.model";
+
 interface Props {
   params: { id: string };
 }
 const ProfilePage = async ({ params }: Props) => {
   let profileData: React.ReactNode | null = null;
-  let friendRequests = [];
+  let receivedPendingfriendRequests = [];
   let profileTabsCopy = profileTabs;
 
   // * User, Whose Profile Is Opened
@@ -35,12 +31,13 @@ const ProfilePage = async ({ params }: Props) => {
   const currentMongoUser = JSON.parse(
     JSON.stringify(await fetchUser(user?.id || ""))
   );
-
+  const isCurrentUser: boolean = params.id === currentMongoUser?.["_id"];
   // * Friend-Request Will Be Shown or Fetched for the Current-Logged-In User, meaning We Can't See Other's Friend-Requests List
-  if (params.id === currentMongoUser?.["_id"]) {
-    friendRequests = JSON.parse(
+  if (isCurrentUser) {
+    receivedPendingfriendRequests = JSON.parse(
       JSON.stringify(await getPendingReceivedFriendRequests(params.id || ""))
     );
+    console.log("hamza");
   } else {
     // Remove the "Friend Requests" element from the array
     profileTabsCopy = profileTabsCopy.filter(
@@ -48,13 +45,17 @@ const ProfilePage = async ({ params }: Props) => {
     );
   }
 
+  const currentFriendRequest = JSON.parse(
+    JSON.stringify(await getFriendRequest(currentMongoUser._id, mongoUser._id))
+  );
+
   const friendRequestsTab =
-    friendRequests.length === 0 ? (
+    receivedPendingfriendRequests.length === 0 ? (
       <div className="text-center my-4">
         <span className="text-gray-300 text-xl">No Remaining Requests</span>
       </div>
     ) : (
-      friendRequests.map((friendRequest: FriendRequest) => (
+      receivedPendingfriendRequests.map((friendRequest: FriendRequest) => (
         <FriendRequestCard
           key={friendRequest?.["_id"]}
           friendRequest={friendRequest}
@@ -68,7 +69,7 @@ const ProfilePage = async ({ params }: Props) => {
           const totalThreadsCount =
             value === "friendRequests" ? (
               <span className="bg-gray-300 text-black px-2 rounded-md">
-                {friendRequests.length}
+                {receivedPendingfriendRequests.length}
               </span>
             ) : null;
 
@@ -103,6 +104,10 @@ const ProfilePage = async ({ params }: Props) => {
       mongoUser={mongoUser}
       currentMongoUser={currentMongoUser}
       clerkUser={user}
+      friendRequestsData={{
+        currentFriendRequest,
+        receivedPendingfriendRequests,
+      }}
     />
   );
 

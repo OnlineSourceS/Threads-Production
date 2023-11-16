@@ -1,4 +1,5 @@
 "use client";
+import { TbLoader3 } from "react-icons/tb";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
@@ -20,11 +21,9 @@ import Image from "next/image";
 import { isBase64Image } from "@/lib/utils";
 import { uploadFiles } from "@/utils/uploadthing";
 import { updateUserData } from "@/lib/actions/user.actions";
-import { ObjectId } from "mongoose";
 import { usePathname, useRouter } from "next/navigation";
 import { UploadFileResponse } from "uploadthing/client";
-import { experimental_useFormStatus as useFormStatus } from "react-dom";
-import { revalidatePath } from "next/cache";
+import { toast } from "sonner";
 type User = {
   id?: string;
   objectId?: string;
@@ -57,20 +56,23 @@ const AccountProfile = ({ user, BtnText }: Props) => {
 
   async function onSubmit(values: z.infer<typeof UserValidation>) {
     const { username, name, bio, profile_photo: blob } = values;
-    console.log(values, "values");
 
     // * Check if the image is changed or not!
     const hasImageChanged = isBase64Image(blob);
 
     let uploadthingImageRes: UploadFileResponse[] = [];
-    setIsLoading(true);
 
     if (hasImageChanged) {
+      setIsLoading(true);
+
       // * upload file to Uploadthing using api-endpoint '/imageUploader'
       uploadthingImageRes = await uploadFiles({
         endpoint: "imageUploader",
         files: SelectedFiles as File[],
       });
+    } else {
+      toast.error("Kindly, Upload Your Profile Image!");
+      return;
     }
 
     await updateUserData({
@@ -82,6 +84,7 @@ const AccountProfile = ({ user, BtnText }: Props) => {
       path: pathname,
     });
 
+    toast.success("Successfully, Configured Your Profile!");
     setIsLoading(false);
     router.push("/");
   }
@@ -204,9 +207,10 @@ const AccountProfile = ({ user, BtnText }: Props) => {
               disabled={IsLoading}
               className="w-full flex gap-1.5 items-center"
             >
-              <span>{IsLoading ? "Please Wait..." : BtnText}</span>
-
-              {!IsLoading ? <ProfileIcon /> : null}
+              <span>{IsLoading ? "Preparing" : BtnText}</span>
+              <span>
+                {!IsLoading ? ">" : <TbLoader3 className="animate-spin" />}
+              </span>
             </Button>
           </form>
         </Form>
@@ -215,22 +219,4 @@ const AccountProfile = ({ user, BtnText }: Props) => {
   );
 };
 
-function ProfileIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-4 h-4 font-bold"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8.25 4.5l7.5 7.5-7.5 7.5"
-      />
-    </svg>
-  );
-}
 export default AccountProfile;

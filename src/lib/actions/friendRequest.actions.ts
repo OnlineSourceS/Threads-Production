@@ -8,29 +8,51 @@ import FriendRequestModel, {
 import { safeAsyncOperation } from "../utils";
 import UserModel, { IUserSchema } from "../models/user.model";
 
+export async function rejectFriendRequest(requestId: string, path: string) {
+  const asyncFn = async () => {
+    const deletedRequest = await FriendRequestModel.findOneAndRemove({
+      _id: requestId,
+    });
+
+
+    if (!deletedRequest) {
+      throw new Error("Friend request not found");
+    }
+    revalidatePath(path);
+  };
+
+  return await safeAsyncOperation(asyncFn);
+}
+
 export async function sendFriendRequest(
   senderId: string,
   recipientId: string,
   path: string
 ) {
   return await safeAsyncOperation(async () => {
+
     await connectToMongoDB();
+
     // Check if a friend request already exists between the sender and recipient
-    const existingRequest = await FriendRequestModel.findOne({
+    const existingRequest:IFriendRequestSchema | null = await FriendRequestModel.findOne({
       sender: senderId,
       recipient: recipientId,
     });
 
-    if (existingRequest) {
-      throw new Error("Friend request already sent.");
+    if (!existingRequest) {
+      // Create and save a new friend request
+      const friendRequest: IFriendRequestSchema = new FriendRequestModel({
+        sender: senderId,
+        recipient: recipientId,
+      });
+      
+      await friendRequest.save();
+    }else{
+
+      // * Toggle Friend-Request, if sent, then remove, if not-sent, then send
+      rejectFriendRequest(existingRequest?.['_id'], path)
+      return;
     }
-
-    // Create and save a new friend request
-    const friendRequest: IFriendRequestSchema = new FriendRequestModel({
-      sender: senderId,
-      recipient: recipientId,
-    });
-    await friendRequest.save();
 
     revalidatePath(path);
   });
@@ -77,9 +99,9 @@ export async function getPendingReceivedFriendRequests(
     isAccepted: false,
   }).populate("sender", "_id name username image ", UserModel);
 
-  return await pendingRequests;
+  console.log(pendingRequests, "Coder")
+  return pendingRequests;
 }
-
 export async function getFriends(userId: string): Promise<string[] | null> {
   return await safeAsyncOperation(async () => {
     await connectToMongoDB();
@@ -116,7 +138,19 @@ export async function getPendingSentFriendRequests(
 
   return await safeAsyncOperation(asyncFn);
 }
+export async function getFriendRequest(senderId: string, recipientId: string): Promise<IFriendRequestSchema | null> {
+  const asyncFn = async () => {
+    await connectToMongoDB();
+    const friendRequest = await FriendRequestModel.findOne({
+      sender: senderId,
+      recipient: recipientId,
+    });
 
+    return friendRequest;
+  };
+
+  return await safeAsyncOperation(asyncFn);
+}
 export async function countSentFriendRequests(
   userId: string
 ): Promise<number | null> {
@@ -148,17 +182,3 @@ export async function countReceivedFriendRequests(
   return await safeAsyncOperation(asyncFn);
 }
 
-export async function rejectFriendRequest(requestId: string, path: string) {
-  const asyncFn = async () => {
-    const deletedRequest = await FriendRequestModel.findOneAndRemove({
-      _id: requestId,
-    });
-
-    if (!deletedRequest) {
-      throw new Error("Friend request not found");
-    }
-    revalidatePath(path);
-  };
-
-  return await safeAsyncOperation(asyncFn);
-}

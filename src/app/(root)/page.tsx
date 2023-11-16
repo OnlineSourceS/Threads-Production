@@ -5,12 +5,17 @@ import ThreadCard from "@/components/cards/ThreadCard/ThreadCard";
 import ReelsContainer from "@/components/containers/ReelsContainer";
 import { fetchThreads } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
+import { IUserSchema } from "@/lib/models/user.model";
 import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export default async function Home(props) {
   const user = await currentUser();
   if (!user) return null;
-  const mongoUser = await fetchUser(user?.id);
+
+  const mongoUser: IUserSchema | null = await fetchUser(user?.id);
+
+  if (!mongoUser["onboarded"]) return redirect("/onboarding");
   const { threads, isNextPage, totalThreadsCount } = JSON.parse(
     JSON.stringify(await fetchThreads(Number(props.searchParams.page ?? 1)))
   );

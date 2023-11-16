@@ -1,11 +1,14 @@
 "use client";
 import { toast, Toaster } from "sonner";
-import { sendFriendRequest } from "@/lib/actions/friendRequest.actions";
+import {
+  countReceivedFriendRequests,
+  sendFriendRequest,
+} from "@/lib/actions/friendRequest.actions";
 import { toggleFollow } from "@/lib/actions/user.actions";
 import { IUserSchema } from "@/lib/models/user.model";
 import { User } from "@clerk/nextjs/server";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiPencilAlt } from "react-icons/hi";
 import {
   Accordion,
@@ -23,16 +26,34 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { IoMdCloudUpload } from "react-icons/io";
+import {
+  AiFillCaretRight,
+  AiFillCloseCircle,
+  AiOutlineCheck,
+  AiOutlineUserAdd,
+} from "react-icons/ai";
+import { RiChatFollowUpFill } from "react-icons/ri";
+import { IFriendRequestSchema } from "@/lib/models/friendRequest.model";
 
 interface Props {
   mongoUser: IUserSchema | null;
   clerkUser: User | null;
   currentMongoUser: IUserSchema | null;
+  friendRequestsData: {
+    currentFriendRequest: IFriendRequestSchema | null;
+    receivedPendingfriendRequests: IFriendRequestSchema[];
+  };
 }
 
-const ProfileHeader = ({ mongoUser, clerkUser, currentMongoUser }: Props) => {
+const ProfileHeader = ({
+  friendRequestsData,
+  mongoUser,
+  clerkUser,
+  currentMongoUser,
+}: Props) => {
   const path = usePathname();
   const [selectedImage, setSelectedImage] = useState(null);
+  useEffect(() => {}, []);
 
   async function handleFollow(e) {
     await toggleFollow(mongoUser?._id, currentMongoUser?._id, path);
@@ -60,18 +81,25 @@ const ProfileHeader = ({ mongoUser, clerkUser, currentMongoUser }: Props) => {
   async function handleAddFriend(e) {
     const isYourOwnProfile = currentMongoUser?._id === mongoUser?._id;
     if (isYourOwnProfile) return toast.error("You Can't Follow Yourself");
-    await sendFriendRequest(currentMongoUser?._id, mongoUser?._id, path);
+
+    // await sendFriendRequest(currentMongoUser?._id, mongoUser?._id, path);
   }
 
+  let isFollowing = mongoUser?.followers.includes(currentMongoUser?.["_id"]);
   const followButton =
     mongoUser?.["clerkId"].toString() !== clerkUser?.id.toString() ? (
       <button
         onClick={handleFollow}
-        className="bg-gray-600 text-sm text-white px-5 py-2 rounded-xl hover:bg-[#7d73fdbe] transition duration-300"
+        className={`group bg-gray-600 flex gap-2 items-center text-sm text-white px-5 py-2 rounded-xl   ${
+          isFollowing ? "hover:bg-red-500/50" : " hover:bg-[#7d73fdbe]"
+        } transition duration-300`}
       >
-        {mongoUser?.followers.includes(currentMongoUser?.["_id"])
-          ? "Following"
-          : "Follow"}
+        <span>{isFollowing ? "Following" : "Follow"}</span>
+        {isFollowing ? (
+          <AiFillCloseCircle className="transition-all group-hover:opacity-100 group-hover:h-5 group-hover:w-5 h-0 w-0  opacity-0" />
+        ) : (
+          <AiOutlineUserAdd />
+        )}
       </button>
     ) : null;
 
@@ -81,9 +109,14 @@ const ProfileHeader = ({ mongoUser, clerkUser, currentMongoUser }: Props) => {
         onClick={handleAddFriend}
         className="bg-gray-600 text-sm text-white px-5 py-2 rounded-xl hover:bg-[#7d73fdbe] transition duration-300"
       >
-        {mongoUser?.followers.includes(currentMongoUser?.["_id"])
-          ? "Add Friend"
-          : "Friends"}
+        {friendRequestsData.currentFriendRequest ? (
+          <span className="flex items-center gap-2">
+            <span>Sent Request</span>
+            <AiOutlineCheck />
+          </span>
+        ) : (
+          "Add Friend"
+        )}
       </button>
     ) : null;
   return (
@@ -161,7 +194,10 @@ const ProfileHeader = ({ mongoUser, clerkUser, currentMongoUser }: Props) => {
           <div className="bg-gray-800 px-6 py-4">
             <ul className="flex space-x-4 items-center">
               <li>
-                <span className="text-gray-400 mr-2 hover:text-blue-500">
+                <span
+                  onClick={() => console.log(friendRequestsData)}
+                  className="text-gray-400 mr-2 hover:text-blue-500"
+                >
                   Threads:
                 </span>
                 <span>{mongoUser?.["threads"].length}</span>

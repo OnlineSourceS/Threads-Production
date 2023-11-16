@@ -29,6 +29,7 @@ import {
 import { RxFileMinus } from "react-icons/rx";
 import Link from "next/link";
 import NotificationBar from "./NotificationBar";
+import NavigationBackForward from "../../components/shared/NavigateBackForward";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -54,7 +55,8 @@ export default function RootLayout({
               <LeftSideBarContainer />
               <section className="mx-auto text-white w-[68%] p-2 overflow-y-scroll">
                 <Toaster invert />
-                {children}
+                <NavigationBackForward />
+                <div className="py-4">{children}</div>
               </section>
 
               {/* server-side-component  */}

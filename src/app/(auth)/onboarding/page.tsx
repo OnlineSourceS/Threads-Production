@@ -1,6 +1,7 @@
 import AccountProfile from "@/components/forms/AccountProfile";
 import connectToMongoDB from "@/lib/db/connectToMongoDB";
 import UserModel, { IUserSchema } from "@/lib/models/user.model";
+import { SelectKeys } from "@/utils/types";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
@@ -29,13 +30,11 @@ const OnboardingPage = async () => {
   // as when he is landed first time on the onboarding after signup from clerk,
   // He wouldn't have any kind of record in the mongo-db
   // * Querying For The user through its clerkId
-  const mongoUser: SelectKeys<
-    IUserSchema,
-    "_id" | "image" | "bio" | "username" | "name" | "clerkId"
-  > | null = (await UserModel.findOne({ clerkId: clerkUser?.id })) ?? {};
+  const mongoUser: IUserSchema | null =
+    (await UserModel.findOne({ clerkId: clerkUser?.id })) ?? {};
 
   if (mongoUser?.["onboarded"]) {
-    redirect("/");
+    // return redirect("/ ");
   }
 
   let accountProfile: React.ReactNode | null =
@@ -53,7 +52,7 @@ const OnboardingPage = async () => {
           bio: mongoUser?.bio || "",
         }}
         BtnText="Continue"
-      />
+      ></AccountProfile>
     ) : null;
   return (
     // server-side-component

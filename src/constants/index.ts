@@ -20,6 +20,12 @@ export const sidebarLinks = [
     route: "/create-thread",
     label: "Thread",
   },
+  
+  {
+    imgURL: "/assets/create.svg",
+    route: "/create-reel",
+    label: "Post Reel",
+  },
   {
     imgURL: "/assets/reels.svg",
     route: "/reels",

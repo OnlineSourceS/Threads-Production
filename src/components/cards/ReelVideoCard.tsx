@@ -24,7 +24,7 @@ const ReelVideoCard: React.FC<ReelVideoCardProps> = ({ videoSrc }) => {
               <RiVideoFill size={22} />
             </button>
           </div>
-          <div className="mid self-end flex flex-col gap-5 p-1">
+          <div className="mid relative left-[5rem] self-end flex flex-col gap-5 p-1">
             <button className="flex flex-col items-center gap-1 opacity-90 ">
               <div className="icon bg-gray-700/10 transition hover:bg-gray-400/30 p-3  rounded-full">
                 <ThumbsUp size={23} className="" />

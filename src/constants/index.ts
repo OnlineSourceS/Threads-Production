@@ -49,7 +49,7 @@ export let profileTabs = [
   { value: "tagged", label: "Tagged", icon: "/assets/tag.svg" },
   {
     value: "friendRequests",
-    label: "Friend Requests Received",
+    label: "Requests",
     icon: "/assets/members.svg",
   },
 ];

@@ -12,6 +12,7 @@ import {
   getFriendRequest,
   getPendingReceivedFriendRequests,
 } from "@/lib/actions/friendRequest.actions";
+import { parseJsonObject } from "@/lib/utils";
 
 interface Props {
   params: { id: string };
@@ -22,22 +23,25 @@ const ProfilePage = async ({ params }: Props) => {
   let profileTabsCopy = profileTabs;
 
   // * User, Whose Profile Is Opened
-  const mongoUser = await fetchUser("", params.id || "");
+  const mongoUser = JSON.parse(
+    JSON.stringify(await fetchUser("", params.id || ""))
+  );
   if (!mongoUser) return profileData;
   if (!mongoUser?.["onboarded"]) return redirect("/onboarding");
 
   // * Current-User
   const user = await currentUser();
-  const currentMongoUser = JSON.parse(
-    JSON.stringify(await fetchUser(user?.id || ""))
-  );
+  const currentMongoUser = parseJsonObject(await fetchUser(user?.id || ""));
+
   const isCurrentUser: boolean = params.id === currentMongoUser?.["_id"];
   // * Friend-Request Will Be Shown or Fetched for the Current-Logged-In User, meaning We Can't See Other's Friend-Requests List
   if (isCurrentUser) {
-    receivedPendingfriendRequests = JSON.parse(
-      JSON.stringify(await getPendingReceivedFriendRequests(params.id || ""))
+    receivedPendingfriendRequests = parseJsonObject(
+      await getPendingReceivedFriendRequests(currentMongoUser?.["_id"] || "")
     );
-    console.log("hamza");
+
+    console.log("------------------------------------------");
+    console.log(receivedPendingfriendRequests);
   } else {
     // Remove the "Friend Requests" element from the array
     profileTabsCopy = profileTabsCopy.filter(
@@ -45,8 +49,8 @@ const ProfilePage = async ({ params }: Props) => {
     );
   }
 
-  const currentFriendRequest = JSON.parse(
-    JSON.stringify(await getFriendRequest(currentMongoUser._id, mongoUser._id))
+  const currentFriendRequest = parseJsonObject(
+    await getFriendRequest(currentMongoUser?.["_id"], mongoUser?.["_id"])
   );
 
   const friendRequestsTab =
@@ -55,7 +59,7 @@ const ProfilePage = async ({ params }: Props) => {
         <span className="text-gray-300 text-xl">No Remaining Requests</span>
       </div>
     ) : (
-      receivedPendingfriendRequests.map((friendRequest: FriendRequest) => (
+      receivedPendingfriendRequests?.map((friendRequest: FriendRequest) => (
         <FriendRequestCard
           key={friendRequest?.["_id"]}
           friendRequest={friendRequest}

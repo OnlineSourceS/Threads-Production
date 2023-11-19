@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@alptugidin/react-circular-progress-bar": "^1.1.0",
     "@clerk/nextjs": "^4.23.2",
     "@clerk/themes": "^1.7.5",
     "@hookform/resolvers": "^3.2.0",

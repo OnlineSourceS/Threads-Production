@@ -53,7 +53,6 @@ const ProfileHeader = ({
 }: Props) => {
   const path = usePathname();
   const [selectedImage, setSelectedImage] = useState(null);
-  useEffect(() => {}, []);
 
   async function handleFollow(e) {
     await toggleFollow(mongoUser?._id, currentMongoUser?._id, path);
@@ -82,7 +81,7 @@ const ProfileHeader = ({
     const isYourOwnProfile = currentMongoUser?._id === mongoUser?._id;
     if (isYourOwnProfile) return toast.error("You Can't Follow Yourself");
 
-    // await sendFriendRequest(currentMongoUser?._id, mongoUser?._id, path);
+    await sendFriendRequest(currentMongoUser?._id, mongoUser?._id, path);
   }
 
   let isFollowing = mongoUser?.followers.includes(currentMongoUser?.["_id"]);
@@ -111,7 +110,11 @@ const ProfileHeader = ({
       >
         {friendRequestsData.currentFriendRequest ? (
           <span className="flex items-center gap-2">
-            <span>Sent Request</span>
+            {friendRequestsData.currentFriendRequest.isAccepted ? (
+              <span>Friends</span>
+            ) : (
+              <span>Sent Request</span>
+            )}
             <AiOutlineCheck />
           </span>
         ) : (
@@ -195,7 +198,13 @@ const ProfileHeader = ({
             <ul className="flex space-x-4 items-center">
               <li>
                 <span
-                  onClick={() => console.log(friendRequestsData)}
+                  onClick={() =>
+                    console.log(
+                      friendRequestsData.receivedPendingfriendRequests,
+                      currentMongoUser,
+                      mongoUser
+                    )
+                  }
                   className="text-gray-400 mr-2 hover:text-blue-500"
                 >
                   Threads:

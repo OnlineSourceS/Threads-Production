@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { RxCross2 } from "react-icons/rx";
@@ -14,19 +13,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ThreadFormData, ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
 import { ObjectId } from "mongoose";
 import { uploadFiles } from "@/utils/uploadthing";
+import { Flat, Heat, Nested } from "@alptugidin/react-circular-progress-bar";
+
 import { toast } from "sonner";
 import { hasTyped } from "@/lib/utils";
 import { UploadFileResponse } from "uploadthing/client";
-import { RiLoader2Fill } from "react-icons/ri";
-import { Loader, Loader2Icon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   userId: { userMongoId: string | ObjectId | null };
@@ -38,7 +37,7 @@ const PostThread = ({ userId: { userMongoId } }: Props) => {
   >([]);
   const pathname = usePathname();
   const form = useForm<z.infer<typeof ThreadValidation>>({
-    // resolver: zodResolver(ThreadValidation),
+    resolver: zodResolver(ThreadValidation),
     defaultValues: {
       accountId: userMongoId || null,
       thread: "",
@@ -105,6 +104,15 @@ const PostThread = ({ userId: { userMongoId } }: Props) => {
     setSelectedImages(updatedImages);
   }
 
+  function handleThreadTextChange(
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    threadFieldChange: (...event: any[]) => void,
+    value: string
+  ) {
+    // threadFieldChange(e.target.value);
+    threadFieldChange(e.target.value);
+    console.log(form.getValues("thread"));
+  }
   return (
     <>
       <Form {...form}>
@@ -123,12 +131,43 @@ const PostThread = ({ userId: { userMongoId } }: Props) => {
                     unselectable="on"
                     placeholder="Write Your Own Thread"
                     {...field}
+                    onChange={(e) => {
+                      handleThreadTextChange(e, field.onChange, field.value);
+                    }}
                   />
                 </FormControl>
-                <FormDescription>
-                  {" "}
-                  Make Others Listen Your Voice
-                </FormDescription>
+                <div className="flex justify-between">
+                  <FormDescription className="">
+                    <span
+                      className={`transition-all ${
+                        form.getValues("thread").length
+                          ? "text-white scale-125 text-lg"
+                          : "scale-80 text-md"
+                      } font-light`}
+                    >
+                      ({form.getValues("thread").length}/50)
+                    </span>{" "}
+                    <span>Make Others Listen Your Voice </span>
+                  </FormDescription>
+
+                  <span className="scale-125 h-9 w-9 mt-1">
+                    <Flat
+                      progress={(100 * form.getValues("thread").length) / 50}
+                      showMiniCircle={true}
+                      sx={{
+                        shape: "full",
+                        strokeColor: "#8168df",
+                        loadingTime: 450,
+                        barWidth: 5,
+                        valueWeight: "bolder",
+                        valueColor: "#c2c2c2",
+                        valueFamily: "Helvetica",
+                        textWeight: "bolder",
+                        miniCircleColor: "#fafafa",
+                      }}
+                    />
+                  </span>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -152,7 +191,7 @@ const PostThread = ({ userId: { userMongoId } }: Props) => {
 
                 <FormDescription>
                   {" "}
-                  Make Others Listen Your Voice
+                  Upload Media as Moments Related To Your Thread
                 </FormDescription>
                 <FormMessage />
               </FormItem>

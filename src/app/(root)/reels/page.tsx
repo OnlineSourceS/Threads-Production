@@ -21,7 +21,7 @@ const ReelsPage = () => {
   return (
     <section className="pt-5 pl-4">
       <div className="flex justify-between">
-        <h1 className="font-bold text-2xl ">Reels</h1>
+        <h1 className="font-bold text-2xl">Reels</h1>
         <Link
           href={"/create-reel"}
           className="flex items-center gap-2 py-2 px-4 bg-neutral-400/40 transition-all hover:bg-neutral-400/50  rounded-full"

@@ -15,7 +15,7 @@ export const CommentValidation = z.object({
     .string()
     .nonempty()
     .min(5, { message: "Minimum 4 Chracters" })
-    .max(30, { message: "Maximum 30 Characters" }),
+    .max(50, { message: "Maximum 30 Characters" }),
 });
 
 export const threadReplyValidation = z.object({

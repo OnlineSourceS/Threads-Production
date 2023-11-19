@@ -86,3 +86,11 @@ export function hasTyped(str: string) {
   // Check if the resulting string has at least one character
   return stringWithoutSpaces.length > 0;
 }
+
+
+ 
+// * To Re-Parse The Given-Object and returns the same {{object}}
+// * Not-Neccessary But To Minimize The NextJS-14 Bug, not to pass plain-objects from Server To Client-Components
+export function parseJsonObject<T>(givenObject: T):T {
+  return JSON.parse(JSON.stringify(givenObject));
+}

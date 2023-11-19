@@ -37,6 +37,7 @@ export async function sendFriendRequest(
     const existingRequest:IFriendRequestSchema | null = await FriendRequestModel.findOne({
       sender: senderId,
       recipient: recipientId,
+      isAccepted: false,
     });
 
     if (!existingRequest) {
@@ -44,6 +45,7 @@ export async function sendFriendRequest(
       const friendRequest: IFriendRequestSchema = new FriendRequestModel({
         sender: senderId,
         recipient: recipientId,
+        
       });
       
       await friendRequest.save();
@@ -97,7 +99,7 @@ export async function getPendingReceivedFriendRequests(
   const pendingRequests = await FriendRequestModel.find({
     recipient: userId,
     isAccepted: false,
-  }).populate("sender", "_id name username image ", UserModel);
+  }).populate("sender", "_id name username image", UserModel);
 
   console.log(pendingRequests, "Coder")
   return pendingRequests;

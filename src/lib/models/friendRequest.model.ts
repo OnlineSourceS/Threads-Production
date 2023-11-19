@@ -26,6 +26,7 @@ const friendRequestsSchema: Schema<IFriendRequestSchema> =
     // * If True, The "Recipent" Accepted The Sender's Request
     isAccepted: {
       type: Boolean,
+      default: false
     },
     // Add a field to reference the User model
   });

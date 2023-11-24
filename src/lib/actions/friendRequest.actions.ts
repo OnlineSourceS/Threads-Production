@@ -141,12 +141,24 @@ export async function getPendingSentFriendRequests(
   return await safeAsyncOperation(asyncFn);
 }
 export async function getFriendRequest(senderId: string, recipientId: string): Promise<IFriendRequestSchema | null> {
+  let friendRequest = null;
   const asyncFn = async () => {
     await connectToMongoDB();
-    const friendRequest = await FriendRequestModel.findOne({
+      friendRequest = await FriendRequestModel.findOne({
       sender: senderId,
       recipient: recipientId,
     });
+
+    if(friendRequest){
+      return friendRequest
+    }
+
+    // * IMPORTANT-CONCEPT: Both Percpective!!! a friend request is not just from one-side, it's both-sided
+      friendRequest = await FriendRequestModel.findOne({
+      sender: recipientId,
+      recipient: senderId,
+    });
+    
 
     return friendRequest;
   };

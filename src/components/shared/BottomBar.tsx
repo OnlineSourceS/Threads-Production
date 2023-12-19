@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-const BottomBar = () => {
+function BottomBar() {
   const pathname = usePathname();
   console.log(pathname);
   return (
@@ -29,6 +29,6 @@ const BottomBar = () => {
       })}
     </div>
   );
-};
+}
 
 export default BottomBar;

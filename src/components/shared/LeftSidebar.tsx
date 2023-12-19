@@ -9,7 +9,7 @@ import React, { useState } from "react";
 interface Props {
   mongoUser: IUserSchema;
 }
-const LeftSidebar = ({ mongoUser }: Props) => {
+function LeftSidebar({ mongoUser }: Props) {
   const pathname = usePathname();
   console.log(pathname);
 
@@ -60,6 +60,6 @@ const LeftSidebar = ({ mongoUser }: Props) => {
       </SignedIn>
     </>
   );
-};
+}
 
 export default LeftSidebar;

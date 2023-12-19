@@ -9,9 +9,9 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 
-const TopBar = () => {
+function TopBar() {
   //localhost:3000/http://localhost:3000/
-  http: return (
+  return (
     <nav className="sticky top-0 z-20 text-white bg-[#121415] p-4 flex justify-between items-center">
       <Link href={"/"} className="flex gap-6 items-center">
         <Image src={"/logo.svg"} alt="LOGO" width={28} height={28} />
@@ -47,6 +47,6 @@ const TopBar = () => {
       </div>
     </nav>
   );
-};
+}
 
 export default TopBar;

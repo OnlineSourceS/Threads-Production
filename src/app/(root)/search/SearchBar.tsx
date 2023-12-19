@@ -2,8 +2,16 @@
 import { getActivity } from "@/lib/actions/thread.actions";
 import { fetchUsers } from "@/lib/actions/user.actions";
 import { IUserSchema } from "@/lib/models/user.model";
+import {
+  CroissantIcon,
+  Cross,
+  CrossIcon,
+  ShieldCloseIcon,
+  SidebarCloseIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { RiCloseCircleFill } from "react-icons/ri";
 
 interface Props {
   mongoUser: IUserSchema;
@@ -11,31 +19,27 @@ interface Props {
 const SearchBar = ({ mongoUser }: Props) => {
   const [SearchQuery, setSearchQuery] = useState<string>("");
   const router = useRouter();
-  async function handleSearchQuery(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    // const res = await fetchUsers(mongoUser["_id"], 3, 1, SearchQuery, "asc");
+
+  useEffect(() => {
     if (SearchQuery) router.push(`/search?q=${SearchQuery}`);
     else router.push(`/search`);
-  }
+  }, [SearchQuery]);
 
   const clearButton = SearchQuery ? (
     <span
-      className="mx-3 text-xs text-gray-400 underline hover:text-red-300 cursor-pointer"
+      className="mx-3 text-xs text-gray-400 underline hover:text-red-400 transition-all active:scale-125 cursor-pointer"
       onClick={(e) => {
         setSearchQuery("");
-        router.push("/search");
+        // router.push("/search");
       }}
     >
-      clear
+      <RiCloseCircleFill size={20} />
     </span>
   ) : null;
 
   return (
     <div className="w-full mx-auto py-3 text-white">
-      <form
-        onSubmit={handleSearchQuery}
-        className="relative rounded-xl bg-gray-600 shadow-md"
-      >
+      <form className="relative rounded-xl bg-gray-600 shadow-md">
         <input
           type="text"
           placeholder="Search..."

@@ -6,7 +6,7 @@ import { RiCloseCircleFill } from "react-icons/ri";
 
 import Users from "./Users";
 
-const RightSidebar = async () => {
+async function RightSidebar() {
   const user = await currentUser();
   const mongoUser = await fetchUser(user?.id);
 
@@ -14,6 +14,6 @@ const RightSidebar = async () => {
 
   // const users = await fetchUsers()
   return <Users users={users} mongoUser={mongoUser} />;
-};
+}
 
 export default RightSidebar;

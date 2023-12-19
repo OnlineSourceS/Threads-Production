@@ -26,6 +26,7 @@ const SearchPage = async ({ searchParams }: Props) => {
   if (!mongoUser) return null;
   if (mongoUser?.["onboarded"] === false) return redirect("/onboarding");
   const searchQuery = searchParams.q;
+
   const res = await fetchUsers(
     mongoUser["_id"],
     3,

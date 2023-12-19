@@ -6,7 +6,7 @@ import { IUserSchema } from "@/lib/models/user.model";
 interface Props {
   mongoUser: IUserSchema;
 }
-const ThreadsTab = async ({ mongoUser }: Props) => {
+async function ThreadsTab({ mongoUser }: Props) {
   const result: IUserSchema = await fetchUserPosts(mongoUser?.["_id"]);
   console.log("first", mongoUser);
 
@@ -39,6 +39,6 @@ const ThreadsTab = async ({ mongoUser }: Props) => {
       })}
     </section>
   );
-};
+}
 
 export default ThreadsTab;

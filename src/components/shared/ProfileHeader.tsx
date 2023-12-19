@@ -45,12 +45,12 @@ interface Props {
   };
 }
 
-const ProfileHeader = ({
+function ProfileHeader({
   friendRequestsData,
   mongoUser,
   clerkUser,
   currentMongoUser,
-}: Props) => {
+}: Props) {
   const path = usePathname();
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -240,6 +240,6 @@ const ProfileHeader = ({
       </div>
     </div>
   );
-};
+}
 
 export default ProfileHeader;

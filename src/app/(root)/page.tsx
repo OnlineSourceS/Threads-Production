@@ -8,6 +8,7 @@ import { fetchUser } from "@/lib/actions/user.actions";
 import { IUserSchema } from "@/lib/models/user.model";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { WhatsOnYourMind } from "./WhatsOnYourMind";
 
 export default async function Home(props) {
   const user = await currentUser();
@@ -29,7 +30,8 @@ export default async function Home(props) {
         <ReelCard />
         <ReelCard />
       </ReelsContainer>
-      <h1 className="text-2xl font-semibold mt-7">Threads</h1>
+      {/* <h1 className="text-2xl font-semibold mt-7">Threads</h1> */}
+      <WhatsOnYourMind user={mongoUser} />
       <div className="w-full">
         {/* server-side component  */}
         <ThreadsContainer

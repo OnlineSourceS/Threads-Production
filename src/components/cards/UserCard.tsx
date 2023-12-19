@@ -29,7 +29,7 @@ function UserCard({ name, image, userId, mongoUser }: Props) {
             width={28}
             height={28}
           />
-          <Link href={"/profile/" + userId} title={"User: " + name}>
+          <Link href={`/profile/${userId}`} title={`User: ${name}`}>
             <span className="text-md font-semibold text-white">{name}</span>
           </Link>
         </div>

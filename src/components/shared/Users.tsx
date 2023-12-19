@@ -7,6 +7,8 @@ import {
   ArrowBigRight,
   ArrowRightFromLine,
   ArrowRightIcon,
+  SidebarCloseIcon,
+  SidebarOpenIcon,
 } from "lucide-react";
 import {
   FaArrowCircleLeft,
@@ -19,26 +21,26 @@ interface Props {
   users: IUserSchema[];
   mongoUser: IUserSchema | null;
 }
-const Users = ({ users, mongoUser }: Props) => {
+function Users({ users, mongoUser }: Props) {
   const [Show, setShow] = useState(true);
 
   return (
     <>
       <div className="group">
         <button
-          className="lg:block group-hover:opacity-80 transition-all hover:scale-125 opacity-40 hidden sticky top-[22rem] right-0 z-30"
+          className="lg:block group-hover:opacity-80 transition-all opacity-40 hidden sticky top-[22rem] right-0 z-30"
           onClick={() => setShow((prev) => !prev)}
         >
           {" "}
           {Show ? (
-            <FiChevronRight
+            <SidebarOpenIcon
               size={30}
-              className="hover:opacity-80 bg-black text-white rounded-full transition"
+              className="hover:opacity-70 bg-black text-white rounded-full transition"
             />
           ) : (
-            <FiChevronLeft
+            <SidebarCloseIcon
               size={30}
-              className="hover:opacity-80 bg-black text-white rounded-full transition"
+              className="hover:opacity-70 bg-black text-white rounded-full transition"
             />
           )}
         </button>
@@ -54,7 +56,10 @@ const Users = ({ users, mongoUser }: Props) => {
             <div className="flex flex-col mt-4 rounded-lg">
               {users.length
                 ? users?.map((user, idx) => (
-                    <div className="bg-gray-200/10 rounded-lg px-2" key={idx}>
+                    <div
+                      className="bg-gray-200/10 rounded-lg px-2 text-xs"
+                      key={idx}
+                    >
                       <UserCard
                         name={user["name"]}
                         image={user["image"]}
@@ -63,13 +68,13 @@ const Users = ({ users, mongoUser }: Props) => {
                       />
                     </div>
                   ))
-                : "No Users!"}
+                : "No Users Found To Be Suggested!"}
             </div>
           </div>
         </div>
       </div>
     </>
   );
-};
+}
 
 export default Users;

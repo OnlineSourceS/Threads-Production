@@ -60,6 +60,7 @@ const ProfileHeader = ({
   }
 
   function handleProfileUpload(e) {
+    console.log(selectedImage);
     toast.error("Image Upload Functionality Is In Process");
   }
 

@@ -122,14 +122,11 @@ const ThreadCard = ({
     // e.currentTarget.childNodes[0].childNodes[1].value = "";
   }
   const handleLikes = async () => {
-    if (!state.isLiked) {
-      toast.success("Feedback Shared With Author");
-    }
-
     dispatch({ type: "TOGGLE_LIKES_COUNT" });
 
     await updateLikes(currentUser?.["_id"], threadId, path);
-    console.log(currentUser?._id, threadId, "hteuh", state.isLiked);
+    toast.success("Feedback Shared With Author");
+    // console.log(currentUser?._id, threadId, "hteuh", state.isLiked);
   };
   const toggleReplyForm = () => dispatch({ type: "TOGGLE_THREAD_REPLY_FORM" });
   const toggleThreadReplies = () => dispatch({ type: "TOGGLE_THREAD_REPLIES" });
@@ -264,7 +261,7 @@ const ThreadCard = ({
                 isShownMoreMedia={state.isShownMoreMedia}
               ></MediaContent>
             ) : null}
-            <div className="flex items-center mt-2 gap-2">
+            <div className="flex items-center mt-2 mb-1 gap-2">
               <span
                 onClick={handleLikes}
                 title="Demo Feature (Currently in Process...)"
@@ -275,22 +272,14 @@ const ThreadCard = ({
                 ) : (
                   <HeartIconOutline className="h-5 w-5" />
                 )}
-                <span>{likes ? Number(likes.length) : "NE"}</span>
               </span>
-              <Image
-                src="/assets/reply.svg"
-                alt="heart"
-                width={23}
-                height={23}
-                className="cursor-pointer object-contain"
-              />
 
               <Image
                 src="/assets/share.svg"
                 alt="heart"
                 width={23}
                 height={23}
-                className="cursor-pointer object-contain"
+                className="cursor-pointer object-contain text-white"
               />
 
               <Dialog>
@@ -338,6 +327,18 @@ const ThreadCard = ({
                 </DialogContent>
               </Dialog>
             </div>
+            <span className="ml-0.5 font-bold">
+              <span className="text-md mr-1">
+                {likes
+                  ? Number(likes.length) + Number(state.isLiked)
+                    ? 1
+                    : 0
+                  : "NE"}
+              </span>
+              <span className="text-md">
+                {Number(likes?.length) > 1 ? "Likes" : "Like"}
+              </span>
+            </span>
             <div className="replies flex gap-3 mt-2.5">
               {repliesToggleButton}
               {replyToggleButton}

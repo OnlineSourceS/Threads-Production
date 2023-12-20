@@ -1,4 +1,4 @@
-const ReplyCard = ({ reply }) => {
+function ReplyCard({ reply }) {
   const author = reply?.author;
 
   return (
@@ -29,6 +29,6 @@ const ReplyCard = ({ reply }) => {
       </div>
     </div>
   );
-};
+}
 
 export default ReplyCard;

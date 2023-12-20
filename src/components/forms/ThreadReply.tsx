@@ -18,7 +18,7 @@ interface Props {
   isComment?: boolean;
 }
 
-const ThreadReply: React.FC<Props> = ({
+function ThreadReply({
   currentUser,
   threadId,
   author,
@@ -27,7 +27,7 @@ const ThreadReply: React.FC<Props> = ({
   community,
   replies,
   isComment,
-}) => {
+}: Props) {
   const [thread, setThread] = useState<string>(""); // Initialize the "thread" state
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
@@ -83,6 +83,6 @@ const ThreadReply: React.FC<Props> = ({
       </form>
     </div>
   );
-};
+}
 
 export default ThreadReply;

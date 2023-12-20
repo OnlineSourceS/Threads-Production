@@ -17,7 +17,7 @@ import { parseJsonObject } from "@/lib/utils";
 interface Props {
   params: { id: string };
 }
-const ProfilePage = async ({ params }: Props) => {
+async function ProfilePage({ params }: Props) {
   let profileData: React.ReactNode | null = null;
   let receivedPendingfriendRequests = [];
   let profileTabsCopy = profileTabs;
@@ -123,6 +123,6 @@ const ProfilePage = async ({ params }: Props) => {
   );
 
   return profileData;
-};
+}
 
 export default ProfilePage;

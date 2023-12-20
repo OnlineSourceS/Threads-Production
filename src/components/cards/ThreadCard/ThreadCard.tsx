@@ -61,7 +61,7 @@ interface ThreadProps {
   readonly media?: MediaType[];
 }
 
-const ThreadCard = ({
+function ThreadCard({
   threadId,
   author,
   threadText,
@@ -72,7 +72,7 @@ const ThreadCard = ({
   currentUser,
   likes,
   media,
-}: ThreadProps) => {
+}: ThreadProps) {
   console.log(replies);
   const [Loading, setLoading] = useState(false);
   const path = usePathname();
@@ -354,7 +354,7 @@ const ThreadCard = ({
   );
 
   return threadCard;
-};
+}
 // console.log()
 // this is the thread card
 

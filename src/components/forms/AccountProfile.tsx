@@ -37,7 +37,7 @@ interface Props {
   BtnText: string;
 }
 
-const AccountProfile = ({ user, BtnText }: Props) => {
+function AccountProfile({ user, BtnText }: Props) {
   const [SelectedFiles, setSelectedFiles] = useState<File[] | FileList | null>(
     null
   );
@@ -217,6 +217,6 @@ const AccountProfile = ({ user, BtnText }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default AccountProfile;

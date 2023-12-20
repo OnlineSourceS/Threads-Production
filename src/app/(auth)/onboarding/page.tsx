@@ -7,18 +7,20 @@ import { redirect } from "next/navigation";
 
 import React, { useEffect } from "react";
 
-const OnboardingSection = ({ children }: { children: React.ReactNode }) => (
-  <div className="container mx-auto px-4 py-8">
-    <h1 className="text-3xl font-semibold my-3">Onboarding</h1>
-    <p>
-      Complete your Profile, An adventurous soul with a passion for learning,
-      connecting, and making a positive impact
-    </p>
-    <section>{children}</section>
-  </div>
-);
+function OnboardingSection({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-semibold my-3">Onboarding</h1>
+      <p>
+        Complete your Profile, An adventurous soul with a passion for learning,
+        connecting, and making a positive impact
+      </p>
+      <section>{children}</section>
+    </div>
+  );
+}
 
-const OnboardingPage = async () => {
+async function OnboardingPage() {
   // * Fetching Current (SignnedIn) User From CLerk
   const clerkUser = await currentUser();
   if (!clerkUser) return redirect("/sign-up");
@@ -58,6 +60,6 @@ const OnboardingPage = async () => {
     // server-side-component
     <OnboardingSection>{accountProfile}</OnboardingSection>
   );
-};
+}
 
 export default OnboardingPage;

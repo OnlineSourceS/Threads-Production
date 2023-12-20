@@ -8,7 +8,7 @@ interface ReelVideoCardProps {
   videoSrc: string;
 }
 
-const ReelVideoCard: React.FC<ReelVideoCardProps> = ({ videoSrc }) => {
+function ReelVideoCard({ videoSrc }: ReelVideoCardProps) {
   return (
     <div className="video relative h-[70vh] w-[28vw] snap-start ">
       <video
@@ -67,6 +67,6 @@ const ReelVideoCard: React.FC<ReelVideoCardProps> = ({ videoSrc }) => {
       </div>
     </div>
   );
-};
+}
 
 export default ReelVideoCard;

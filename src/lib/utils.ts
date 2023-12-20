@@ -56,7 +56,7 @@ export function removeExtraSpaces(inputString: string): string {
 export function isLikedByTheUser(
   likes: ObjectId[],
   currentUserId: ObjectId
-): boolean {
+): boolean | void {
   if (!currentUserId || !likes) return;
 
   const isUserFound = likes?.find(
@@ -80,17 +80,29 @@ export async function safeAsyncOperation<T>(
 
 // * For Thread-Posting
 export function hasTyped(str: string) {
-  // Remove all spaces from the string
+  // * Remove all spaces from the string
   const stringWithoutSpaces = str.replace(/\s/g, "");
 
-  // Check if the resulting string has at least one character
+  // * Check if the resulting string has at least one character
   return stringWithoutSpaces.length > 0;
 }
 
-
- 
 // * To Re-Parse The Given-Object and returns the same {{object}}
 // * Not-Neccessary But To Minimize The NextJS-14 Bug, not to pass plain-objects from Server To Client-Components
-export function parseJsonObject<T>(givenObject: T):T {
-  return JSON.parse(JSON.stringify(givenObject));
+export function parseJsonObject<T>(givenObject: T): T {
+  return <T>JSON.parse(JSON.stringify(givenObject));
+}
+
+export function preciseTextWithThreeDots(
+  str: string | undefined,
+  endingStr: string,
+  lim: number
+): string {
+  if (str)
+    return `${str?.slice(0, lim)}${
+      str.length < lim ? "" : endingStr ? endingStr : "..."
+    }`;
+
+  // * if str not provided returning just '...' to make debugging more easier
+  return "...";
 }

@@ -5,9 +5,7 @@ interface ReelVideosContainerProps {
   children: ReactNode;
 }
 
-const ReelVideosContainer: React.FC<ReelVideosContainerProps> = ({
-  children,
-}) => {
+function ReelVideosContainer({ children }: ReelVideosContainerProps) {
   useEffect(() => {
     // selecting the cards which will be observed for intersepting events to handle play/pause, when come up into "View"
     const elements = document.querySelectorAll(".video");
@@ -41,6 +39,6 @@ const ReelVideosContainer: React.FC<ReelVideosContainerProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default ReelVideosContainer;

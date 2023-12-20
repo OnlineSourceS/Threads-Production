@@ -7,7 +7,7 @@ import Link from "next/link";
 import React from "react";
 import { HiChevronDoubleRight } from "react-icons/hi";
 
-const NotificationBar = async () => {
+async function NotificationBar() {
   const user = await currentUser();
   const mongoUser: IUserSchema | null = await fetchUser(user?.id || "");
 
@@ -36,6 +36,6 @@ const NotificationBar = async () => {
         </Alert>
       </div>
     );
-};
+}
 
 export default NotificationBar;

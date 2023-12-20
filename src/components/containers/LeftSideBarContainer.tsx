@@ -3,7 +3,7 @@ import LeftSidebar from "../shared/LeftSidebar";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 
-const LeftSideBarContainer = async () => {
+async function LeftSideBarContainer() {
   const user = await currentUser();
   if (!user?.id) return;
   const mongoUser = await fetchUser(user.id);
@@ -14,6 +14,6 @@ const LeftSideBarContainer = async () => {
       </div>
     </section>
   );
-};
+}
 
 export default LeftSideBarContainer;

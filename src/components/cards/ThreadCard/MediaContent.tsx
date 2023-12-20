@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import { ActionType } from "./reducer";
 
-const MediaContent = ({
+function MediaContent({
   media,
   dispatch,
   isShownMoreMedia,
@@ -13,7 +13,7 @@ const MediaContent = ({
     type: ActionType;
   }>;
   isShownMoreMedia: boolean;
-}) => {
+}) {
   if (media.length === 0) {
     return null;
   }
@@ -79,6 +79,6 @@ const MediaContent = ({
       </div>
     </>
   );
-};
+}
 
 export default MediaContent;

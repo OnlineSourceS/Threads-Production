@@ -19,7 +19,7 @@ type searchQuery = { q?: string | null };
 interface Props {
   searchParams: searchQuery;
 }
-const SearchPage = async ({ searchParams }: Props) => {
+async function SearchPage({ searchParams }: Props) {
   const user = await currentUser();
   const mongoUser = await fetchUser(user?.id || "");
 
@@ -61,6 +61,6 @@ const SearchPage = async ({ searchParams }: Props) => {
       </div>
     </section>
   );
-};
+}
 
 export default SearchPage;

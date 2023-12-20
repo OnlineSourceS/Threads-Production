@@ -16,7 +16,7 @@ import { RiCloseCircleFill } from "react-icons/ri";
 interface Props {
   mongoUser: IUserSchema;
 }
-const SearchBar = ({ mongoUser }: Props) => {
+function SearchBar({ mongoUser }: Props) {
   const [SearchQuery, setSearchQuery] = useState<string>("");
   const router = useRouter();
 
@@ -60,7 +60,7 @@ const SearchBar = ({ mongoUser }: Props) => {
       </form>
     </div>
   );
-};
+}
 
 export default SearchBar;
 

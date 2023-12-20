@@ -7,7 +7,7 @@ import { currentUser } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
 
-const ActivityPage = async () => {
+async function ActivityPage() {
   const user = await currentUser();
   const mongoUser = await fetchUser(user?.id);
   const res = await getActivity(mongoUser?._id);
@@ -22,6 +22,6 @@ const ActivityPage = async () => {
       ))}
     </section>
   );
-};
+}
 
 export default ActivityPage;

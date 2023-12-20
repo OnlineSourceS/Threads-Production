@@ -8,7 +8,7 @@ import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-const ThreadPage = async (props) => {
+async function ThreadPage(props) {
   const user = await currentUser();
   if (!user) return redirect("/");
 
@@ -81,6 +81,6 @@ const ThreadPage = async (props) => {
       </div>
     </>
   );
-};
+}
 
 export default ThreadPage;

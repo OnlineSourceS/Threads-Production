@@ -19,7 +19,7 @@ import { ThreadFormData, ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
 import { ObjectId } from "mongoose";
 import { uploadFiles } from "@/utils/uploadthing";
-import { Flat, Heat, Nested } from "@alptugidin/react-circular-progress-bar";
+import { Flat } from "@alptugidin/react-circular-progress-bar";
 
 import { toast } from "sonner";
 import { hasTyped } from "@/lib/utils";
@@ -30,7 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface Props {
   userId: { userMongoId: string | ObjectId | null };
 }
-const PostThread = ({ userId: { userMongoId } }: Props) => {
+function PostThread({ userId: { userMongoId } }: Props) {
   const [Isloading, setIsloading] = useState(false);
   const [SelectedImages, setSelectedImages] = useState<
     { src: string; image: File }[]
@@ -242,7 +242,7 @@ const PostThread = ({ userId: { userMongoId } }: Props) => {
       </div>
     </>
   );
-};
+}
 
 function PlusIcon() {
   return (

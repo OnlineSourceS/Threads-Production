@@ -1,4 +1,5 @@
 "use client";
+import { PiShareFatLight } from "react-icons/pi";
 
 import { IUserSchema } from "@/lib/models/user.model";
 import { ObjectId } from "mongoose";
@@ -32,7 +33,11 @@ import {
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { IThreadSchema } from "@/lib/models/thread.model";
-import { isLikedByTheUser } from "@/lib/utils";
+import {
+  formatTimestamp,
+  isLikedByTheUser,
+  parseJsonObject,
+} from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import {
   RiLoader2Fill,
@@ -40,27 +45,34 @@ import {
   RiLoader4Line,
   RiLoaderLine,
   RiSendPlaneFill,
+  RiShareCircleLine,
 } from "react-icons/ri";
 import { MediaType } from "@/utils/types";
 import ReplyCard from "../ReplyCard";
 import { FaTruckLoading } from "react-icons/fa";
-import { Loader, Loader2, Loader2Icon } from "lucide-react";
+import {
+  Loader,
+  Loader2,
+  Loader2Icon,
+  Share2Icon,
+  ShareIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import threadReducer, { ActionType } from "./reducer";
 import MediaContent from "./MediaContent";
+import { IoMdShareAlt } from "react-icons/io";
 interface ThreadProps {
-  readonly currentUser: IUserSchema | null;
-  readonly threadId: ObjectId;
-  readonly author: IUserSchema; // Assuming author is of type string
-  readonly threadText: string;
-  readonly parentId: string;
-  readonly community: ObjectId | null; // Assuming community can be null or a string
-  readonly replies: ObjectId[]; // Assuming children is an array of string IDs Of Itself means {{Thread-Model}}
-  readonly isComment?: boolean;
-  readonly likes?: ObjectId[];
-  readonly media?: MediaType[];
+  currentUser: IUserSchema | null;
+  threadId: ObjectId;
+  author: IUserSchema; // Assuming author is of type string
+  threadText: string;
+  parentId?: string;
+  community?: ObjectId | null; // Assuming community can be null or a string
+  replies: ObjectId[]; // Assuming children is an array of string IDs Of Itself means {{Thread-Model}}
+  isComment?: boolean;
+  likes: ObjectId[];
+  media: MediaType[];
 }
-
 function ThreadCard({
   threadId,
   author,
@@ -72,7 +84,8 @@ function ThreadCard({
   currentUser,
   likes,
   media,
-}: ThreadProps) {
+  createdAt,
+}: Readonly<ThreadProps>) {
   console.log(replies);
   const [Loading, setLoading] = useState(false);
   const path = usePathname();
@@ -217,8 +230,31 @@ function ThreadCard({
     ) : (
       replies.map((reply: IThreadSchema, idx) => {
         // console.log(reply, "reply");
-        const author: IUserSchema = reply?.["author"] as IUserSchema;
-        return <ReplyCard reply={reply} key={idx} />;
+        // const author: IUserSchema = reply?.["author"] as IUserSchema;
+        const {
+          _id,
+          author,
+          threadText,
+          parentId,
+          createdAt,
+          community,
+          likes,
+          media,
+        } = parseJsonObject(reply);
+
+        return (
+          <ThreadCard
+            author={author}
+            currentUser={currentUser}
+            likes={likes}
+            media={media}
+            replies={[]}
+            threadId={_id}
+            threadText={threadText}
+            createdAt={createdAt}
+            parentId={parentId}
+          />
+        );
       })
     );
 
@@ -237,9 +273,12 @@ function ThreadCard({
                 <Link
                   href={`/profile/${author?.["_id"]}`}
                   // title={"Author: " + author?.["name"]}
-                  className="text-xs cursor-pointer mb-1 font-semibold text-gray-100"
+                  className="flex gap-2 text-xs cursor-pointer mb-1 font-semibold text-gray-100"
                 >
-                  {author?.["name"]}
+                  <span>{author?.["name"]}</span>
+                  <span className="text-xs text-neutral-400">
+                    ({formatTimestamp(createdAt)})
+                  </span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
@@ -249,9 +288,7 @@ function ThreadCard({
           </TooltipProvider>
 
           <div className="text-sm mt-1 text-gray-300">
-            <p className="" onClick={() => console.log(media.at(0)?.url)}>
-              {threadText}
-            </p>
+            <p>{threadText}</p>
             {routeToThreadDetails}
             <div className="bg-gray-600 p-[0.5px]" />
             {media ? (
@@ -287,13 +324,7 @@ function ThreadCard({
                   title="Share the post"
                   className="bg-gray-800 p-2 transition-all hover:bg-gray-700 rounded-full"
                 >
-                  <Image
-                    src="/assets/repost.svg"
-                    alt="heart"
-                    width={23}
-                    height={23}
-                    className="cursor-pointer object-contain"
-                  />
+                  <PiShareFatLight size={20} />
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
@@ -345,7 +376,9 @@ function ThreadCard({
             </div>
             {state.isVisibleReplyForm ? threadReplyForm : null}
             {state.isVisibleReplies ? (
-              <div className="mt-4">{threadReplies}</div>
+              <div className="mt-4 border-2 border-r-0 border-b-0 border-neutral-700 rounded-2xl">
+                {threadReplies}
+              </div>
             ) : null}
           </div>
         </div>
@@ -416,24 +449,6 @@ function RightArrow() {
         />
       </svg>
     </>
-  );
-}
-function SendIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-5 h-5"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-      />
-    </svg>
   );
 }
 

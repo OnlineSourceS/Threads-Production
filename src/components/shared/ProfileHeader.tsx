@@ -1,4 +1,6 @@
 "use client";
+import { Copy, SearchIcon } from "lucide-react";
+
 import { toast, Toaster } from "sonner";
 import {
   countReceivedFriendRequests,
@@ -20,6 +22,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -34,6 +37,9 @@ import {
 } from "react-icons/ai";
 import { RiChatFollowUpFill } from "react-icons/ri";
 import { IFriendRequestSchema } from "@/lib/models/friendRequest.model";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import UserCard from "../cards/UserCard";
 
 interface Props {
   mongoUser: IUserSchema | null;
@@ -54,7 +60,9 @@ function ProfileHeader({
   const path = usePathname();
   const [selectedImage, setSelectedImage] = useState(null);
 
-  async function handleFollow(e) {
+  async function handleFollow(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     await toggleFollow(mongoUser?._id, currentMongoUser?._id, path);
     console.log(mongoUser?.["_id"], currentMongoUser?.["_id"]);
   }
@@ -213,10 +221,51 @@ function ProfileHeader({
                 <span>{mongoUser?.["threads"].length}</span>
               </li>
               <li>
-                <span className="text-gray-400 mr-2 hover:text-blue-500">
-                  Followers:
-                </span>
-                <span>{mongoUser?.["followers"].length}</span>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="link">
+                      <span className="text-gray-400 mr-2 hover:text-blue-500">
+                        Followers:
+                      </span>
+                      <span>{mongoUser?.["followers"].length}</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Followers</DialogTitle>
+                      <DialogDescription>
+                        Find Your All Followers
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center space-x-2">
+                      <div className="grid flex-1 gap-2">
+                        <Label htmlFor="link" className="sr-only">
+                          Link
+                        </Label>
+
+                        <Input
+                          type="text"
+                          id="link"
+                          placeholder="Search The Followers"
+                        />
+                      </div>
+                      <Button
+                        type="submit"
+                        size="lg"
+                        variant={"link"}
+                        className="px-3"
+                      >
+                        <SearchIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <UserCard
+                      mongoUser={currentMongoUser}
+                      userId={mongoUser["_id"]}
+                      name={mongoUser?.name}
+                      image={mongoUser?.image}
+                    />
+                  </DialogContent>
+                </Dialog>
               </li>
               <li>
                 <span className="text-gray-400 mr-2 hover:text-blue-500">

@@ -1,8 +1,9 @@
 "use client";
 import { IThreadSchema } from "@/lib/models/thread.model";
+import { formatTimestamp } from "@/lib/utils";
 import Link from "next/link";
 
-export default function ActivityCard({ reply }: any) {
+export default function ActivityCard({ reply }: IThreadSchema) {
   return (
     <div
       onClick={() => {
@@ -10,6 +11,9 @@ export default function ActivityCard({ reply }: any) {
       }}
       className="bg-gray-800 p-4 rounded-xl rounded-tl-none shadow-md mt-2"
     >
+      <span className="text-xs text-neutral-400">
+        {formatTimestamp(reply.createdAt)}
+      </span>
       <div className="flex items-center">
         {/* Left side: Profile Image */}
         <img

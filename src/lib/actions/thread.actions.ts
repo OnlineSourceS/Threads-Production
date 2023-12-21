@@ -39,7 +39,7 @@ export async function createThread({
 export async function fetchThreads(
   pageNumber: number = 1,
   pageSize: number = 5
-) { 
+) {
   console.log(pageNumber, pageSize);
   const skipNumberOfThreads = (pageNumber - 1) * pageSize;
   await connectToMongoDB();
@@ -199,9 +199,7 @@ export async function fetchUserPosts(userId: string): Promise<IUserSchema[]> {
     return [];
   }
 }
-export async function getActivity(
-  userId: string
-): Promise<ReplaceProperty<IThreadSchema, "author", IUserSchema>[]> {
+export async function getActivity(userId: string): Promise<IThreadSchema[]> {
   // * Fetching All threads of the Given-User (Current-User) through its "userId"
   const userThreads: IThreadSchema[] = await ThreadModel.find({
     author: userId,
@@ -234,7 +232,7 @@ export const updateLikes = async (
   threadId: ObjectId,
   path: string
 ): Promise<boolean | null> => {
-  return safeAsyncOperation(async () => {
+  return await safeAsyncOperation(async () => {
     // * both targeted thread-id and user-id are required to proceed further
     if (!threadId || !userId) {
       throw new Error(

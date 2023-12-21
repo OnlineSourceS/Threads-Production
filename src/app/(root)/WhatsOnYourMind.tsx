@@ -21,39 +21,45 @@ export function WhatsOnYourMind({ user }: Props): JSX.Element {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <div className="flex items-center justify-start ml-8 gap-5">
-            <img
-              src={user?.image}
-              className="rounded-full w-14 h-14"
-              alt=""
-              srcset=""
-            />
-            <div
-              // href={"/create-reel"}
-              className=" hover:bg-opacity-80 transition flex my-8 items-center justify-between gap-2 py-2 pl-5 pr-2.5 rounded-full bg-neutral-700 cursor-text"
-            >
-              <span className="font-bold text-lg pl-3 text-neutral-400 mr-4">
-                What's On Your Mind,{" "}
-                {preciseTextWithThreeDots(user?.name, "...?", 4)}
-              </span>
-              <button className="rounded-full text-md py-2 px-8 bg-violet-500 hover:bg-violet-400 transition text-white">
-                Post
-              </button>
+          <div className="pl-8">
+            <div className="flex justify-start items-center gap-5">
+              <img
+                src={user?.image}
+                className="rounded-full w-14 h-14 focus:outline hover:scale-95 transition-all cursor-pointer"
+                alt=""
+              />
+              <div className="">
+                <div className=" hover:bg-neutral-700 transition flex my-8 items-center justify-between gap-2 py-2 pl-5 pr-2.5 rounded-full bg-neutral-800 cursor-text">
+                  <span className="font-bold text-lg pl-3 text-neutral-400 mr-4">
+                    What's On Your Mind,{" "}
+                    {preciseTextWithThreeDots(user?.name, "...?", 4)}
+                  </span>
+                  <button className="rounded-full text-md py-2 px-8 bg-violet-500 hover:bg-violet-400 transition text-white">
+                    Post
+                  </button>
+                </div>
+                <p className="text-neutral-500 -mt-4">
+                  let's share your voice to the world
+                </p>
+              </div>
             </div>
           </div>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-4xl">
+        <DialogContent
+          id="shaddu"
+          className="sm:max-w-2xl"
+          style={{ height: "80vh", overflow: "scroll" }}
+        >
           <DialogHeader>
             <DialogTitle>Post A Thread</DialogTitle>
 
-            <div>
-              <PostThread userId={{ userMongoId: user?.["_id"] }} />
-            </div>
             <DialogDescription>
               Share Your Stories To The Raw World, Share your best Life Moments
             </DialogDescription>
           </DialogHeader>
-          <div className="flex items-center space-x-2"></div>
+          <div className=" ">
+            <PostThread userId={{ userMongoId: user?.["_id"] }} />
+          </div>
           <DialogFooter className="sm:justify-start"></DialogFooter>
         </DialogContent>
       </Dialog>

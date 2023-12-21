@@ -10,6 +10,7 @@ import ThreadCard from "./cards/ThreadCard/ThreadCard";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { parseJsonObject } from "@/lib/utils";
 
 interface Props {
   isNextPage: boolean;
@@ -50,12 +51,14 @@ function ThreadsContainer({
           children,
           likes,
           media,
-        } = JSON.parse(JSON.stringify(thread));
+          createdAt,
+        } = parseJsonObject(thread);
 
         return threads.length ? (
           /* client-side component */
           <ThreadCard
             key={_id}
+            createdAt={createdAt}
             currentUser={mongoUser as object}
             threadId={_id}
             author={author}

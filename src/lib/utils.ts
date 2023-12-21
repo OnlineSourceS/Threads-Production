@@ -56,7 +56,7 @@ export function removeExtraSpaces(inputString: string): string {
 export function isLikedByTheUser(
   likes: ObjectId[],
   currentUserId: ObjectId
-): boolean | void {
+): boolean {
   if (!currentUserId || !likes) return;
 
   const isUserFound = likes?.find(
@@ -105,4 +105,17 @@ export function preciseTextWithThreeDots(
 
   // * if str not provided returning just '...' to make debugging more easier
   return "...";
+}
+
+export function formatTimestamp(timestamp: string): string {
+  const date = new Date(timestamp);
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  };
+  return date.toLocaleString("en-US", options);
 }

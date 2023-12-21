@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className}  `}>
+        <body className={`${inter.className} bg-black`}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <NotificationBar></NotificationBar>
             {/* server-side component  */}

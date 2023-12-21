@@ -1,10 +1,12 @@
+import { formatTimestamp } from "@/lib/utils";
+
 function ReplyCard({ reply }) {
   const author = reply?.author;
 
   return (
     <div
       key={reply._id}
-      className="bg-gray-500/10 px-4 py-3 my-2 rounded-2xl shadow-md"
+      className="rounded-2xl hover:bg-neutral-800 px-4 py-3 shadow-md"
     >
       <div className="flex items-center space-x-3">
         <img
@@ -21,7 +23,7 @@ function ReplyCard({ reply }) {
               {author.name}
             </span>
             <span className="text-gray-400 text-xs">
-              ({reply.createdAt.toString()})
+              ({formatTimestamp(reply.createdAt)})
             </span>
           </div>
           <p className="text-gray-300 text-xs">{reply.threadText}</p>

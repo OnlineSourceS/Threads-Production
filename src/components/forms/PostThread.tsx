@@ -24,12 +24,17 @@ import { Flat } from "@alptugidin/react-circular-progress-bar";
 import { toast } from "sonner";
 import { hasTyped } from "@/lib/utils";
 import { UploadFileResponse } from "uploadthing/client";
-import { Loader2Icon } from "lucide-react";
+import { ArrowRight, Loader2Icon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "../ui/button";
+import { RiAttachment2 } from "react-icons/ri";
 
 interface Props {
   userId: { userMongoId: string | ObjectId | null };
 }
+
 function PostThread({ userId: { userMongoId } }: Props) {
   const [Isloading, setIsloading] = useState(false);
   const [SelectedImages, setSelectedImages] = useState<
@@ -109,9 +114,22 @@ function PostThread({ userId: { userMongoId } }: Props) {
     threadFieldChange: (...event: any[]) => void,
     value: string
   ) {
-    // threadFieldChange(e.target.value);
-    threadFieldChange(e.target.value);
-    console.log(form.getValues("thread"));
+    const { value: eValue } = e.target;
+    if (value.length < 50) {
+      threadFieldChange(eValue);
+    } else {
+      toast.message("Reached The Maximum limit Of Threads");
+    }
+  }
+  function handleKeyDown(
+    event: React.KeyboardEvent<HTMLTextAreaElement>,
+    threadFieldChange: (...event: any[]) => void,
+    value: string
+  ) {
+    if (event.key === "Backspace") {
+      event.preventDefault();
+      threadFieldChange(value.slice(0, value.length - 1));
+    }
   }
   return (
     <>
@@ -127,10 +145,13 @@ function PostThread({ userId: { userMongoId } }: Props) {
                 </FormLabel>
                 <FormControl className="">
                   <Textarea
-                    className="focus-visible:ring-0  "
+                    className="text-xl focus-visible:ring-0"
                     unselectable="on"
                     placeholder="Write Your Own Thread"
                     {...field}
+                    onKeyDown={(e) =>
+                      handleKeyDown(e, field.onChange, field.value)
+                    }
                     onChange={(e) => {
                       handleThreadTextChange(e, field.onChange, field.value);
                     }}
@@ -150,24 +171,38 @@ function PostThread({ userId: { userMongoId } }: Props) {
                     <span>Make Others Listen Your Voice </span>
                   </FormDescription>
 
-                  <span className="scale-125 h-9 w-9 mt-1">
+                  <span className="scale-125 h-10 w-10 mt-1">
                     <Flat
                       progress={(100 * form.getValues("thread").length) / 50}
-                      showMiniCircle={true}
+                      // showMiniCircle={true}
                       sx={{
+                        bgStrokeColor: "#dbdbdb",
                         shape: "full",
                         strokeColor: "#8168df",
                         loadingTime: 450,
-                        barWidth: 5,
+                        barWidth: 7,
                         valueWeight: "bolder",
                         valueColor: "#c2c2c2",
                         valueFamily: "Helvetica",
                         textWeight: "bolder",
-                        miniCircleColor: "#fafafa",
+                        miniCircleColor: "white",
                       }}
                     />
                   </span>
                 </div>
+                <RadioGroup defaultValue="comfortable">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="comfortable" id="r2" />
+                    <Label htmlFor="r2">Public</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="compact" id="r3" />
+                    <Label htmlFor="r3"> Private </Label>
+                    <span className="text-neutral-400 text-xs">
+                      (Only For Followers)
+                    </span>
+                  </div>
+                </RadioGroup>{" "}
                 <FormMessage />
               </FormItem>
             )}
@@ -179,14 +214,24 @@ function PostThread({ userId: { userMongoId } }: Props) {
               <FormItem>
                 <FormLabel className="text-gray-300">Choose Images</FormLabel>
                 <FormControl className="">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    placeholder="Select Images For The Post"
-                    {...field}
-                    onChange={(e) => handleImageChange(e)} // Handle file input change
-                  />
+                  <>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      id="input-image"
+                      multiple
+                      placeholder="Select Images For The Post"
+                      {...field}
+                      className="opacity-0"
+                      onChange={(e) => handleImageChange(e)} // Handle file input change
+                    />
+                    <Label id="input-image" htmlFor="input-image">
+                      <a className="hover:underline flex gap-1 cursor-pointer">
+                        <RiAttachment2 />
+                        <span>Attach</span>
+                      </a>
+                    </Label>
+                  </>
                 </FormControl>
 
                 <FormDescription>
@@ -199,15 +244,20 @@ function PostThread({ userId: { userMongoId } }: Props) {
           />
           <button
             type="submit"
-            className="flex gap-2 bg-[#7a71fc] px-6 transition-all py-3 hover:bg-[#776ef7c5] rounded-2xl "
-            disabled={Isloading}
+            className={`flex gap-2 ${
+              form.getValues().thread.length === 0
+                ? "bg-[#776ef7c5]"
+                : "bg-[#7a71fc]"
+            } px-6 transition-all py-3 hover:bg-[#776ef7c5] rounded-2xl `}
+            disabled={Isloading || form.getValues().thread.length === 0}
           >
-            <span>{Isloading ? "Posting" : "Publish Thread"}</span>
+            <span>{Isloading ? "Posting" : "Thread"}</span>
             <span>
               {Isloading ? (
                 <Loader2Icon className="animate-spin" size={22} />
               ) : (
-                <PlusIcon />
+                // <PlusIcon />
+                <></>
               )}
             </span>
           </button>
@@ -241,25 +291,6 @@ function PostThread({ userId: { userMongoId } }: Props) {
         )}
       </div>
     </>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4.5v15m7.5-7.5h-15"
-      />
-    </svg>
   );
 }
 

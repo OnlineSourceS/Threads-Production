@@ -2,7 +2,7 @@
 import { PiShareFatLight } from "react-icons/pi";
 
 import { IUserSchema } from "@/lib/models/user.model";
-import { ObjectId } from "mongoose";
+import { ObjectId, Schema } from "mongoose";
 import Image from "next/image";
 import {
   Tooltip,
@@ -64,7 +64,7 @@ import { IoMdShareAlt } from "react-icons/io";
 interface ThreadProps {
   currentUser: IUserSchema | null;
   threadId: ObjectId;
-  author: IUserSchema; // Assuming author is of type string
+  author: IUserSchema | Schema.Types.ObjectId; // Assuming author is of type string
   threadText: string;
   parentId?: string;
   community?: ObjectId | null; // Assuming community can be null or a string
@@ -72,6 +72,7 @@ interface ThreadProps {
   isComment?: boolean;
   likes: ObjectId[];
   media: MediaType[];
+  createdAt: Date;
 }
 function ThreadCard({
   threadId,

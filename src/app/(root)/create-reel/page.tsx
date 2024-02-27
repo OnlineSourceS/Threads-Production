@@ -1,9 +1,9 @@
 import React from "react";
 
-function PostReel() {
+function UploadForm() {
   return (
     <div
-      className="rounded-lg border bg-gray-900 text-gray-200 max-w-full"
+      className="rounded-lg border bg-gray-900 text-gray-200 shadow-sm w-full max-w-lg"
       data-v0-t="card"
     >
       <div className="flex flex-col space-y-1.5 p-6">
@@ -86,12 +86,12 @@ function PostReel() {
             </div>
           </div>
         </div>
-        <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-gray-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-violet-500 text-gray-100 hover:bg-violet-400 h-10 px-4 py-2 w-full">
-          Upload Reel
+        <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-gray-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-gray-100 hover:bg-blue-700 h-10 px-4 py-2 w-full">
+          Submit
         </button>
       </div>
     </div>
   );
 }
 
-export default PostReel;
+export default UploadForm;

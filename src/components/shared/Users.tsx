@@ -47,13 +47,13 @@ function Users({ users, mongoUser }: Props) {
 
         <div
           style={{ display: !Show ? "none" : "" }}
-          className={` sticky m-3 top-20 left-0 h-screen text-white flex-col bg-[#121415] hidden lg:flex ml-auto`}
+          className={`h-screen text-white flex-col bg-[#121415] hidden lg:flex ml-auto`}
         >
           <div className="card h-1/2 w-80 px-2 py-3">
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <h2 className="font-bold">Suggested Users</h2>
-            </div>
-            <div className="flex flex-col mt-4 rounded-lg">
+            </div> */}
+            {/* <div className="flex flex-col mt-4 rounded-lg">
               {users.length
                 ? users?.map((user, idx) => (
                     <div
@@ -69,7 +69,7 @@ function Users({ users, mongoUser }: Props) {
                     </div>
                   ))
                 : "No Users Found To Be Suggested!"}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

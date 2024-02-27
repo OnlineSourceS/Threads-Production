@@ -21,21 +21,21 @@ export const sidebarLinks = [
     label: "Thread",
   },
   
-  {
-    imgURL: "/assets/create.svg",
-    route: "/create-reel",
-    label: "Post Reel",
-  },
+  // {
+  //   imgURL: "/assets/create.svg",
+  //   route: "/create-reel",
+  //   label: "Post Reel",
+  // },
   {
     imgURL: "/assets/reels.svg",
     route: "/reels",
     label: "Reels",
   },
-  {
-    imgURL: "/assets/community.svg",
-    route: "/communities",
-    label: "Communities",
-  },
+  // {
+  //   imgURL: "/assets/community.svg",
+  //   route: "/communities",
+  //   label: "Communities",
+  // },
   {
     imgURL: "/assets/user.svg",
     route: "/profile",

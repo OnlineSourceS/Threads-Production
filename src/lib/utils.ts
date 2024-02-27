@@ -119,3 +119,15 @@ export function formatTimestamp(timestamp: string): string {
   };
   return date.toLocaleString("en-US", options);
 }
+
+export function queryParamsToObject(url) {
+  const queryString = url.split("?")[1];
+  const params = new URLSearchParams(queryString);
+  const queryParams = {};
+
+  for (const [key, value] of params.entries()) {
+    queryParams[key] = value;
+  }
+
+  return queryParams;
+}

@@ -38,7 +38,7 @@ export async function createThread({
 
 export async function fetchThreads(
   pageNumber: number = 1,
-  pageSize: number = 5
+  pageSize: number = 2
 ) {
   console.log(pageNumber, pageSize);
   const skipNumberOfThreads = (pageNumber - 1) * pageSize;
@@ -49,7 +49,7 @@ export async function fetchThreads(
   })
     .skip(skipNumberOfThreads)
     .limit(pageSize)
-    .sort({ createdAt: "desc" })
+    .sort({ createdAt: "descending" })
     .populate({ path: "author", model: UserModel })
     .populate({
       path: "children",
@@ -225,7 +225,7 @@ export async function getActivity(userId: string): Promise<IThreadSchema[]> {
     // author: { $ne: userId },   // should be on
   }).populate("author", "_id name username image createdAt ", UserModel);
 
-  return replies;
+  return replies ;
 }
 export const updateLikes = async (
   userId: ObjectId,

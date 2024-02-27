@@ -11,12 +11,22 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { parseJsonObject } from "@/lib/utils";
+import { IUserSchema } from "@/lib/models/user.model";
+import {
+  PiSpinner,
+  PiSpinnerBold,
+  PiSpinnerFill,
+  PiSpinnerGap,
+} from "react-icons/pi";
+import Loadmore from "./Loadmore";
 
 interface Props {
   isNextPage: boolean;
   totalThreadsCount: number;
   threads: IThreadSchema[];
   children: React.ReactNode | null;
+  mongoUser: IUserSchema | null;
+  page: number;
 }
 
 function ThreadsContainer({
@@ -59,7 +69,7 @@ function ThreadsContainer({
           <ThreadCard
             key={_id}
             createdAt={createdAt}
-            currentUser={mongoUser as object}
+            currentUser={mongoUser}
             threadId={_id}
             author={author}
             threadText={threadText}
@@ -74,16 +84,17 @@ function ThreadsContainer({
         );
       })}
 
-      <div className="text-center">
-        <Button
-          disabled={!isNextPage}
-          variant={"outline"}
-          onClick={loadMore}
-          className="w-40"
-        >
-          Load More &nbsp; <AiOutlineDown size={16} className="" />
-        </Button>
-      </div>
+      <Loadmore mongoUser={mongoUser} />
+      {/* <div className="text-center">
+    <Button
+      disabled={!isNextPage}
+      variant={"outline"}
+      onClick={loadMore}
+      className="w-40"
+    >
+      Load More &nbsp; <AiOutlineDown size={16} className="" />
+    </Button>
+  </div> */}
     </div>
   );
 }

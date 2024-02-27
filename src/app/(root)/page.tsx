@@ -39,9 +39,10 @@ export default async function Home(props) {
           totalThreadsCount={totalThreadsCount}
           threads={threads}
           mongoUser={mongoUser}
-          prop={props}
           page={Number(props.searchParams.page)}
-        ></ThreadsContainer>
+
+           
+        >{''}</ThreadsContainer>
       </div>
     </div>
   );

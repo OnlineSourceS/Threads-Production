@@ -9,25 +9,7 @@ import { dark } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
 import LeftSideBarContainer from "@/components/containers/LeftSideBarContainer";
 import { Toaster } from "sonner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-import { Button } from "@/components/ui/button";
-import {
-  ArrowBigRight,
-  ArrowBigRightIcon,
-  CrossIcon,
-  Minus,
-  MinusCircle,
-  MinusIcon,
-} from "lucide-react";
-import { RiAlignRight, RiCrossFill } from "react-icons/ri";
-import {
-  HiArrowCircleRight,
-  HiArrowRight,
-  HiChevronDoubleRight,
-} from "react-icons/hi";
-import { RxFileMinus } from "react-icons/rx";
-import Link from "next/link";
+ 
 import NotificationBar from "./NotificationBar";
 import NavigationBackForward from "../../components/shared/NavigateBackForward";
 const inter = Inter({ subsets: ["latin"] });
@@ -50,10 +32,10 @@ export default function RootLayout({
             <NotificationBar></NotificationBar>
             {/* server-side component  */}
             <TopBar />
-            <main className="bg-black mx-auto flex flex-row gap-2">
+            <main className="bg-black w-full p-0 flex flex-row gap-2">
               {/* client-side component  */}
               <LeftSideBarContainer />
-              <section className="mx-auto text-white w-[68%] p-2 overflow-y-scroll">
+              <section className=" text-white w-[68%] p-2 overflow-y-scroll">
                 <Toaster invert />
                 <NavigationBackForward />
                 <div className="py-4">{children}</div>

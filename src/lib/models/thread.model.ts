@@ -1,8 +1,9 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { IUserSchema } from "./user.model";
 
 export interface IThreadSchema extends Document {
   threadText: string;
-  author: Schema.Types.ObjectId; // Reference to User collection
+  author: Schema.Types.ObjectId | IUserSchema; // Reference to User collection
   media: {
     type: "image" | "video"; // "image" or "video"
     url: string; // URL to the image or video file
@@ -11,6 +12,7 @@ export interface IThreadSchema extends Document {
   parentId: string; // Parent Id
   children: Schema.Types.ObjectId[]; // Array of references to Thread collection
   likes: Schema.Types.ObjectId[];
+  createdAt: Date;
 }
 
 const threadSchema: Schema<IThreadSchema> = new Schema<IThreadSchema>(

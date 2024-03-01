@@ -29,7 +29,7 @@ export function WhatsOnYourMind({ user }: Props): JSX.Element {
                 alt=""
               />
               <div className="">
-                <div className=" hover:bg-neutral-700 transition flex my-8 items-center justify-between gap-2 py-2 pl-5 pr-2.5 rounded-full bg-neutral-800 cursor-text">
+                <div className="border-2 border-gray-600 hover:bg-neutral-700 transition flex my-8 items-center justify-between gap-2 py-2 pl-5 pr-2.5 rounded-full bg-neutral-800 cursor-text">
                   <span className="font-bold text-lg pl-3 text-neutral-400 mr-4">
                     What's On Your Mind,{" "}
                     {preciseTextWithThreeDots(user?.name, "...?", 4)}

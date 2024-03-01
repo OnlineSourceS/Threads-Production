@@ -10,15 +10,15 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { WhatsOnYourMind } from "./WhatsOnYourMind";
 
-export default async function Home(props) {
+export default async function Home() {
   const user = await currentUser();
   if (!user) return null;
 
   const mongoUser: IUserSchema | null = await fetchUser(user?.id);
 
-  if (!mongoUser["onboarded"]) return redirect("/onboarding");
+  if (!mongoUser?.["onboarded"]) return redirect("/onboarding");
   const { threads, isNextPage, totalThreadsCount } = JSON.parse(
-    JSON.stringify(await fetchThreads(Number(props.searchParams.page ?? 1)))
+    JSON.stringify(await fetchThreads(Number(1)))
   );
 
   return (
@@ -39,10 +39,10 @@ export default async function Home(props) {
           totalThreadsCount={totalThreadsCount}
           threads={threads}
           mongoUser={mongoUser}
-          page={Number(props.searchParams.page)}
-
-           
-        >{''}</ThreadsContainer>
+          page={1}
+        >
+          {""}
+        </ThreadsContainer>
       </div>
     </div>
   );

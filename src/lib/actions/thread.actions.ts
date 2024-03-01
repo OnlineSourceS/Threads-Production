@@ -7,6 +7,7 @@ import connectToMongoDB from "../db/connectToMongoDB";
 import { ObjectId } from "mongoose";
 import { isLikedByTheUser, safeAsyncOperation } from "../utils";
 import { MediaType, SelectKeys } from "@/utils/types";
+import { Schema } from "mongoose";
 type ThreadParams = SelectKeys<
   IThreadSchema,
   "threadText" | "community" | "author"
@@ -72,6 +73,25 @@ export async function fetchThreads(
 
   return { threads, isNextPage, totalThreadsCount };
 }
+
+export const deleteThreadAndChildren = async (
+  threadId: string | Schema.Types.ObjectId,
+  path: string
+) => {
+  try {
+    // Delete the thread and its children
+    await ThreadModel.deleteMany({
+      $or: [{ _id: threadId }, { parentId: threadId }],
+    });
+
+    // Return success message or do something else
+
+    // revalidatePath(path);
+  } catch (error) {
+    // Handle errors
+    console.error("Error deleting thread and its children:", error);
+  }
+};
 
 export async function fetchThreadById(id: ObjectId): Promise<IThreadSchema> {
   console.log("first");
@@ -225,7 +245,7 @@ export async function getActivity(userId: string): Promise<IThreadSchema[]> {
     // author: { $ne: userId },   // should be on
   }).populate("author", "_id name username image createdAt ", UserModel);
 
-  return replies ;
+  return replies;
 }
 export const updateLikes = async (
   userId: ObjectId,

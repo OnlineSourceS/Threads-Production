@@ -9,9 +9,10 @@ import { dark } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
 import LeftSideBarContainer from "@/components/containers/LeftSideBarContainer";
 import { Toaster } from "sonner";
- 
+
 import NotificationBar from "./NotificationBar";
 import NavigationBackForward from "../../components/shared/NavigateBackForward";
+import { ThreadsProvider } from "@/context/ThreadsProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,24 +30,26 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className} bg-black`}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <NotificationBar></NotificationBar>
-            {/* server-side component  */}
-            <TopBar />
-            <main className="bg-black w-full p-0 flex flex-row gap-2">
+            <ThreadsProvider>
+              <NotificationBar></NotificationBar>
+              {/* server-side component  */}
+              <TopBar />
+              <main className="bg-black w-full p-0 flex justify-between gap-2">
+                {/* client-side component  */}
+                <LeftSideBarContainer />
+                <section className=" text-white w-[68%] p-2">
+                  <Toaster invert />
+                  <NavigationBackForward />
+                  <div className="py-4">{children}</div>
+                </section>
+
+                {/* server-side-component  */}
+                <RightSidebar />
+              </main>
+
               {/* client-side component  */}
-              <LeftSideBarContainer />
-              <section className=" text-white w-[68%] p-2 overflow-y-scroll">
-                <Toaster invert />
-                <NavigationBackForward />
-                <div className="py-4">{children}</div>
-              </section>
-
-              {/* server-side-component  */}
-              <RightSidebar />
-            </main>
-
-            {/* client-side component  */}
-            <BottomBar />
+              <BottomBar />
+            </ThreadsProvider>
           </ThemeProvider>
         </body>
       </html>

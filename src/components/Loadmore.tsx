@@ -9,49 +9,39 @@ import ThreadCard from "./cards/ThreadCard/ThreadCard";
 import { parseJsonObject } from "@/lib/utils";
 import { IUserSchema } from "@/lib/models/user.model";
 import ThreadSkeleton from "./skeletons/cards/ThreadSkeleton";
+import { ApiThreadsResponse, useThreads } from "@/context/ThreadsProvider";
 
 let PageNumber = 2;
-
-interface ApiThreadsResponse {
-  isNextPage: boolean;
-  threads: IThreadSchema[];
-  totalThreadsCount: number;
-}
 
 interface LoadmoreProps {
   mongoUser: IUserSchema | null;
 }
 export default function Loadmore({ mongoUser }: LoadmoreProps) {
   const { inView, ref } = useInView();
-  const [Data, setData] = useState<ApiThreadsResponse>({
-    threads: [],
-    isNextPage: false,
-    totalThreadsCount: 0,
-  });
 
+  const { data, setData } = useThreads();
   const hostUrl = location?.href || "http://localhost:3000";
 
   React.useEffect(() => {
     if (inView) {
       fetch(`${hostUrl}/api/threads/?pageNumber=${PageNumber}&pageSize=${2}`)
         .then((_) => _.json())
-        .then((d: ApiThreadsResponse) => {
+        .then((fetchedData: ApiThreadsResponse) => {
           console.log(
             "-fetched threads: ",
-            d.isNextPage,
-            d.totalThreadsCount,
-            d.threads.length,
+            fetchedData.isNextPage,
+            fetchedData.totalThreadsCount,
+            fetchedData.threads.length,
 
             "-state threads before setting: ",
-            Data.isNextPage,
-            Data.totalThreadsCount,
-            Data.threads.length
+            data.isNextPage,
+            data.totalThreadsCount,
+            data.threads.length
           );
           setData((prev) => {
             return {
-              threads: [...prev?.threads, ...d?.threads],
-              isNextPage: d.isNextPage,
-              totalThreadsCount: d.totalThreadsCount,
+              ...fetchedData,
+              threads: [...prev?.threads, ...fetchedData?.threads],
             };
           });
 
@@ -60,12 +50,12 @@ export default function Loadmore({ mongoUser }: LoadmoreProps) {
       console.log("in view", "", PageNumber);
       //   PageNumber++
     }
-  }, [inView, hostUrl, Data]);
+  }, [inView, hostUrl, data]);
 
   return (
     <>
-      {Data &&
-        Data?.threads.map((thread) => {
+      {data &&
+        data?.threads.map((thread) => {
           const {
             author,
             _id,

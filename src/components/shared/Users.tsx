@@ -26,9 +26,9 @@ function Users({ users, mongoUser }: Props) {
 
   return (
     <>
-      <div className="group">
+      <div style={{width: !Show? '0%': "auto"}} className="group relative overflow-hidden">
         <button
-          className="lg:block group-hover:opacity-80 transition-all opacity-40 hidden sticky top-[22rem] right-0 z-30"
+          className="absolute z-80 top-[50vh] -left-3"
           onClick={() => setShow((prev) => !prev)}
         >
           {" "}
@@ -45,15 +45,14 @@ function Users({ users, mongoUser }: Props) {
           )}
         </button>
 
-        <div
-          style={{ display: !Show ? "none" : "" }}
-          className={`h-screen text-white flex-col bg-[#121415] hidden lg:flex ml-auto`}
+        <div 
+          className={`h-screen text-white flex-col w-full bg-gray-500/30 `}
         >
           <div className="card h-1/2 w-80 px-2 py-3">
-            {/* <div className="flex justify-between">
+            <div className="flex justify-between">
               <h2 className="font-bold">Suggested Users</h2>
-            </div> */}
-            {/* <div className="flex flex-col mt-4 rounded-lg">
+            </div>
+            <div className="flex flex-col mt-4 rounded-lg">
               {users.length
                 ? users?.map((user, idx) => (
                     <div
@@ -69,7 +68,7 @@ function Users({ users, mongoUser }: Props) {
                     </div>
                   ))
                 : "No Users Found To Be Suggested!"}
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

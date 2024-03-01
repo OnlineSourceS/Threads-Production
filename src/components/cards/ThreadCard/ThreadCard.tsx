@@ -20,7 +20,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { postThreadReply, updateLikes } from "@/lib/actions/thread.actions";
+import {
+  deleteThreadAndChildren,
+  postThreadReply,
+  updateLikes,
+} from "@/lib/actions/thread.actions";
 import { GoChevronUp, GoChevronDown } from "react-icons/go";
 import {
   Dialog,
@@ -39,28 +43,20 @@ import {
   parseJsonObject,
 } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import {
-  RiLoader2Fill,
-  RiLoader3Line,
-  RiLoader4Line,
-  RiLoaderLine,
-  RiSendPlaneFill,
-  RiShareCircleLine,
-} from "react-icons/ri";
+import { RiDeleteBin2Fill, RiSave3Fill, RiSendPlaneFill } from "react-icons/ri";
 import { MediaType } from "@/utils/types";
-import ReplyCard from "../ReplyCard";
-import { FaTruckLoading } from "react-icons/fa";
-import {
-  Loader,
-  Loader2,
-  Loader2Icon,
-  Share2Icon,
-  ShareIcon,
-} from "lucide-react";
+import { DeleteIcon, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
-import threadReducer, { ActionType } from "./reducer";
+import threadReducer from "./reducer";
 import MediaContent from "./MediaContent";
-import { IoMdShareAlt } from "react-icons/io";
+import {
+  HiDotsCircleHorizontal,
+  HiOutlineDotsHorizontal,
+} from "react-icons/hi";
+import DropdownMenuComponent from "@/components/shared/DropdownComponent";
+import ModalComponent from "@/components/shared/ModalComponent";
+import { useRouter } from "next/navigation";
+import { useThreads } from "@/context/ThreadsProvider";
 interface ThreadProps {
   currentUser: IUserSchema | null;
   threadId: ObjectId;
@@ -90,7 +86,9 @@ function ThreadCard({
   console.log(replies);
   const [Loading, setLoading] = useState(false);
   const path = usePathname();
+  const router = useRouter();
   const shareLinkInputRef = useRef<HTMLInputElement | null>(null);
+  const { setData, data } = useThreads();
   const [state, dispatch] = useReducer(
     threadReducer, // Define the initial state
     {
@@ -230,8 +228,7 @@ function ThreadCard({
       <p className="text-gray-500 ml-2">No Replies</p>
     ) : (
       replies.map((reply: IThreadSchema, idx) => {
-        // console.log(reply, "reply");
-        // const author: IUserSchema = reply?.["author"] as IUserSchema;
+        // localStorage.getItem("getSessionProvider", {});
         const {
           _id,
           author,
@@ -245,6 +242,7 @@ function ThreadCard({
 
         return (
           <ThreadCard
+            key={_id}
             author={author}
             currentUser={currentUser}
             likes={likes}
@@ -268,28 +266,77 @@ function ThreadCard({
           alt="profile"
         />
         <div className="userText w-full">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Link
-                  href={`/profile/${author?.["_id"]}`}
-                  // title={"Author: " + author?.["name"]}
-                  className="flex gap-2 text-xs cursor-pointer mb-1 font-semibold text-gray-100"
-                >
-                  <span>{author?.["name"]}</span>
-                  <span className="text-xs text-neutral-400">
-                    ({formatTimestamp(createdAt)})
-                  </span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{"Author: " + author?.["name"]}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className="flex justify-between items-center">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Link
+                    href={`/profile/${author?.["_id"]}`}
+                    // title={"Author: " + author?.["name"]}
+                    className="flex gap-2 text-xs cursor-pointer mb-1 font-semibold text-gray-100"
+                  >
+                    <span>{author?.["name"]}</span>
+                    <span className="text-xs text-neutral-400">
+                      ({formatTimestamp(createdAt)})
+                    </span>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{"Author: " + author?.["name"]}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <DropdownMenuComponent
+              items={[
+                // @CodeWith-HAMZA
+                // @ts-ignore
+                {
+                  type: "item",
+                  onClick: async () => {
+                    if(currentUser?._id !== author?._id){
+                      return toast.error("You Don't Have Permission To Delete The Post")
+                    }
+                    if (confirm("Are You Sure To Delete The Post?")) {
+                      setData((prevData) => {
+                        const newThreads = prevData.threads.filter(
+                          (thread) => thread._id !== threadId
+                        );
+                        return {
+                          ...prevData,
+                          threads: newThreads,
+                        };
+                      });
+                      await deleteThreadAndChildren(threadId, path);
+                      router.refresh();
+                      toast.success("Deleted The Post")
+                    }
+                  },
+                  icon: <RiDeleteBin2Fill />,
+                  text: "Delete",
+                  className: "text-red-500 hover:bg-red-500",
+                },
+                {
+                  type: "item",
+                  text: "Save Post",
+                  icon: <RiSave3Fill />,
+                },
+              ]}
+              triggerText={
+                <button className="hover:opacity-70">
+                  <HiOutlineDotsHorizontal />
+                </button>
+              }
+              key={"dropdownText"}
+            />
+          </div>
+
+          <p className="text-xs -mt-1.5 mb-2 text-gray-400">
+            @{author?.["username"]}
+          </p>
 
           <div className="text-sm mt-1 text-gray-300">
-            <p>{threadText}</p>
+            <p className="text-lg">{threadText}</p>
             {routeToThreadDetails}
             <div className="bg-gray-600 p-[0.5px]" />
             {media ? (

@@ -26,7 +26,7 @@ function Users({ users, mongoUser }: Props) {
 
   return (
     <>
-      <div style={{width: !Show? '0%': "auto"}} className="group relative overflow-hidden">
+      <div  className="group relative w-[30%] bg-[#1a182e] px-3 py-4">
         <button
           className="absolute z-80 top-[50vh] -left-3"
           onClick={() => setShow((prev) => !prev)}
@@ -46,17 +46,17 @@ function Users({ users, mongoUser }: Props) {
         </button>
 
         <div 
-          className={`h-screen text-white flex-col w-full bg-gray-500/30 `}
+          className={` h-full text-white flex-col w-full  `}
         >
-          <div className="card h-1/2 w-80 px-2 py-3">
+          <div className="card h-1/2 px-2 py-3">
             <div className="flex justify-between">
               <h2 className="font-bold">Suggested Users</h2>
             </div>
-            <div className="flex flex-col mt-4 rounded-lg">
+            <div className="flex flex-col mt-4 gap-1 rounded-lg">
               {users.length
                 ? users?.map((user, idx) => (
                     <div
-                      className="bg-gray-200/10 rounded-lg px-2 text-xs"
+                      className="rounded-lg px-2 text-xs"
                       key={idx}
                     >
                       <UserCard

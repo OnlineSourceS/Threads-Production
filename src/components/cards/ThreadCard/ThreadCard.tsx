@@ -1,4 +1,5 @@
 "use client";
+
 import { PiShareFatLight } from "react-icons/pi";
 
 import { IUserSchema } from "@/lib/models/user.model";
@@ -45,7 +46,12 @@ import {
 import { usePathname } from "next/navigation";
 import { RiDeleteBin2Fill, RiSave3Fill, RiSendPlaneFill } from "react-icons/ri";
 import { MediaType } from "@/utils/types";
-import { DeleteIcon, Loader2Icon } from "lucide-react";
+import {
+  DeleteIcon,
+  FileHeartIcon,
+  HeartIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { toast } from "sonner";
 import threadReducer from "./reducer";
 import MediaContent from "./MediaContent";
@@ -57,7 +63,7 @@ import DropdownMenuComponent from "@/components/shared/DropdownComponent";
 import ModalComponent from "@/components/shared/ModalComponent";
 import { useRouter } from "next/navigation";
 import { useThreads } from "@/context/ThreadsProvider";
-interface ThreadProps {
+ interface ThreadProps {
   currentUser: IUserSchema | null;
   threadId: ObjectId;
   author: IUserSchema | Schema.Types.ObjectId; // Assuming author is of type string
@@ -294,8 +300,10 @@ function ThreadCard({
                 {
                   type: "item",
                   onClick: async () => {
-                    if(currentUser?._id !== author?._id){
-                      return toast.error("You Don't Have Permission To Delete The Post")
+                    if (currentUser?._id !== author?._id) {
+                      return toast.error(
+                        "You Don't Have Permission To Delete The Post"
+                      );
                     }
                     if (confirm("Are You Sure To Delete The Post?")) {
                       setData((prevData) => {
@@ -309,7 +317,7 @@ function ThreadCard({
                       });
                       await deleteThreadAndChildren(threadId, path);
                       router.refresh();
-                      toast.success("Deleted The Post")
+                      toast.success("Deleted The Post");
                     }
                   },
                   icon: <RiDeleteBin2Fill />,
@@ -350,13 +358,9 @@ function ThreadCard({
               <span
                 onClick={handleLikes}
                 title="Demo Feature (Currently in Process...)"
-                className="likes transition-all flex p-3 bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-full items-center gap-1 cursor-pointer"
+                className="bg-gray-800 rounded-full p-2 hover:bg-gray-700 "
               >
-                {state.isLiked ? (
-                  <HeartIconSolid className="h-5 w-5  " />
-                ) : (
-                  <HeartIconOutline className="h-5 w-5" />
-                )}
+                {state.isLiked ? <HeartIconSolid /> : <HeartIconOutline />}
               </span>
 
               <Image
@@ -406,7 +410,7 @@ function ThreadCard({
                 </DialogContent>
               </Dialog>
             </div>
-            <span className="ml-0.5 font-bold">
+            {/* <span className="ml-0.5 font-bold">
               <span className="text-md mr-1">
                 {likes
                   ? Number(likes.length) + Number(state.isLiked)
@@ -417,7 +421,7 @@ function ThreadCard({
               <span className="text-md">
                 {Number(likes?.length) > 1 ? "Likes" : "Like"}
               </span>
-            </span>
+            </span> */}
             <div className="replies flex gap-3 mt-2.5">
               {repliesToggleButton}
               {replyToggleButton}
@@ -507,7 +511,7 @@ function HeartIconSolid(props: React.HTMLProps<HTMLSpanElement>) {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-full h-full hover:text-red-600 transition-all text-red-500"
+        className="w-5 h-5 hover:text-red-600 transition-all text-red-500"
       >
         <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
       </svg>
@@ -523,7 +527,7 @@ function HeartIconOutline(props: React.HTMLProps<HTMLSpanElement>) {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-full h-full hover:text-red-600 transition-all text-red-500"
+        className="w-5 h-5 hover:text-red-600 transition-all text-red-500"
       >
         <path
           strokeLinecap="round"

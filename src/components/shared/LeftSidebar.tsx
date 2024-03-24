@@ -15,7 +15,7 @@ function LeftSidebar({ mongoUser }: Props) {
 
   return (
     <>
-      <div className="">
+      <div className="flex flex-col gap-2.5">
         {sidebarLinks.map((link, idx) => {
           const isActive =
             (pathname.includes(link.route) && link.route.length > 1) ||
@@ -24,7 +24,7 @@ function LeftSidebar({ mongoUser }: Props) {
           return (
             <div key={idx}>
               <Link
-                className={`flex text-gray-200 gap-2 px-6  rounded-lg py-4 transition-all ease-in cursor-pointer ${
+                className={`flex text-gray-200 gap-2 px-3  rounded-lg py-3 transition-all ease-in cursor-pointer ${
                   isActive ? "bg-[#867DFA]" : "hover:text-white"
                 }`}
                 href={

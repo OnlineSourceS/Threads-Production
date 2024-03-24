@@ -34,10 +34,10 @@ export default function RootLayout({
               <NotificationBar></NotificationBar>
               {/* server-side component  */}
               <TopBar />
-              <main className="bg-black w-full p-0 flex justify-between gap-2">
+              <main className="bg-black w-screen h-screen p-0 flex gap-2">
                 {/* client-side component  */}
                 <LeftSideBarContainer />
-                <section className=" text-white w-[68%] p-2">
+                <section className="h-screen overflow-scroll text-white w-[68%] p-2">
                   <Toaster invert />
                   <NavigationBackForward />
                   <div className="py-4">{children}</div>

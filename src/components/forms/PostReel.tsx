@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 function PostReel() {
+  
   return (
     <div
       className="rounded-lg border bg-gray-900 text-gray-200 max-w-full"

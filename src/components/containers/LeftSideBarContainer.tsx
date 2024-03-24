@@ -8,8 +8,8 @@ async function LeftSideBarContainer() {
   if (!user?.id) return;
   const mongoUser = await fetchUser(user.id);
   return (
-    <section className="sticky top-16 left-0 text-white bg-[#2C2D32] h-screen sm:block hidden">
-      <div className="flex flex-col justify-between overflow-y-scroll gap-6 px-6 h-full">
+    <section className=" text-white bg-[#1c1b2e] h-screen px-4 sm:block hidden">
+      <div className="flex flex-col justify-between items-center overflow-y-scroll gap-6 h-full">
         <LeftSidebar mongoUser={mongoUser} />
       </div>
     </section>

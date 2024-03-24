@@ -30,7 +30,6 @@ import {
 import { Button } from "../ui/button";
 import { IoMdCloudUpload } from "react-icons/io";
 import {
-  AiFillCaretRight,
   AiFillCloseCircle,
   AiOutlineCheck,
   AiOutlineUserAdd,

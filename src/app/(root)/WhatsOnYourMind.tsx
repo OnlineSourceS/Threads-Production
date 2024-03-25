@@ -20,7 +20,7 @@ export function WhatsOnYourMind({ user }: Props): JSX.Element {
   return (
     <>
       <Dialog>
-        <DialogTrigger asChild>
+        <DialogTrigger asChild className="hidden sm:block">
           <div className="pl-8">
             <div className="flex justify-start items-center gap-5">
               <img
@@ -29,8 +29,8 @@ export function WhatsOnYourMind({ user }: Props): JSX.Element {
                 alt=""
               />
               <div className="">
-                <div className="border-2 border-gray-600 hover:bg-neutral-700 transition flex my-8 items-center justify-between gap-2 py-2 pl-5 pr-2.5 rounded-full bg-neutral-800 cursor-text">
-                  <span className="font-bold text-lg pl-3 text-neutral-400 mr-4">
+                <div className="border-2 border-gray-600 hover:bg-neutral-700 transition flex my-8 items-center justify-between gap-2 py-1 md:py-2 sm:py-1 pl-5 md:pr-2.5 pr-1  sm:pr-1.5  rounded-full bg-neutral-800 cursor-text">
+                  <span className="font-bold lg:text-lg md:text-md sm:text-sm pl-3 text-xs text-neutral-400 mr-4">
                     What's On Your Mind,{" "}
                     {preciseTextWithThreeDots(user?.name, "...?", 4)}
                   </span>
@@ -38,7 +38,7 @@ export function WhatsOnYourMind({ user }: Props): JSX.Element {
                     Post
                   </button>
                 </div>
-                <p className="text-neutral-500 -mt-4">
+                <p className="text-neutral-500 -mt-6">
                   let's share your voice to the world
                 </p>
               </div>

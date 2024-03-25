@@ -24,12 +24,13 @@ import { Flat } from "@alptugidin/react-circular-progress-bar";
 import { toast } from "sonner";
 import { hasTyped } from "@/lib/utils";
 import { UploadFileResponse } from "uploadthing/client";
-import { ArrowRight, Loader2Icon } from "lucide-react";
+import { ArrowRight, Loader2Icon, MessageSquarePlus } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "../ui/button";
 import { RiAttachment2 } from "react-icons/ri";
+import { FaFeather } from "react-icons/fa";
 
 interface Props {
   userId: { userMongoId: string | ObjectId | null };
@@ -54,8 +55,8 @@ function PostThread({ userId: { userMongoId } }: Props) {
     if (!userMongoId) {
       router.push("/sign-up");
     }
-    console.log(userMongoId);
-  }, []);
+    console.log(userMongoId, "mongoid he");
+  }, [userMongoId, router]);
 
   async function onSubmit({
     accountId,
@@ -251,7 +252,16 @@ function PostThread({ userId: { userMongoId } }: Props) {
             } px-6 transition-all py-3 hover:bg-[#776ef7c5] rounded-2xl `}
             disabled={Isloading || form.getValues().thread.length === 0}
           >
-            <span>{Isloading ? "Posting" : "Thread"}</span>
+            <span>
+              {Isloading ? (
+                "Posting"
+              ) : (
+                <p className="flex gap-2 items-center">
+                  <span>Thread</span>
+                  <FaFeather size={18} />
+                </p>
+              )}
+            </span>
             <span>
               {Isloading ? (
                 <Loader2Icon className="animate-spin" size={22} />

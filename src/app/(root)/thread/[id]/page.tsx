@@ -1,4 +1,5 @@
 import ThreadCard from "@/components/cards/ThreadCard/ThreadCard";
+import PostThread from "@/components/forms/PostThread";
 import ThreadReply from "@/components/forms/ThreadReply";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
@@ -13,6 +14,7 @@ async function ThreadPage(props) {
   if (!user) return redirect("/");
 
   const mongoUser = await fetchUser(user?.id ?? "");
+  console.log();
   const thread = await fetchThreadById(props.params.id);
   const {
     author,
@@ -40,7 +42,9 @@ async function ThreadPage(props) {
         media={media}
       />
 
-      <div className="thread-reply-form">
+      <div className=" thread-reply-form px-6 mt-4 mb-2 text-xl ">
+        <h2 className="font-bold">Reply</h2>
+        {/* <PostThread userId={{ userMongoId: mongoUser?._id }} /> */}
         <ThreadReply
           threadId={_id}
           author={author}

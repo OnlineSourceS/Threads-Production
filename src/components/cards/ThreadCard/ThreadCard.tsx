@@ -63,7 +63,7 @@ import DropdownMenuComponent from "@/components/shared/DropdownComponent";
 import ModalComponent from "@/components/shared/ModalComponent";
 import { useRouter } from "next/navigation";
 import { useThreads } from "@/context/ThreadsProvider";
- interface ThreadProps {
+interface ThreadProps {
   currentUser: IUserSchema | null;
   threadId: ObjectId;
   author: IUserSchema | Schema.Types.ObjectId; // Assuming author is of type string
@@ -392,12 +392,12 @@ function ThreadCard({
                       <div className="flex mt-3 gap-4 items-center justify-center">
                         <Input
                           ref={shareLinkInputRef}
-                          value={`https://${location.hostname}/thread/${threadId}`}
+                          value={`https://${location?.hostname}/thread/${threadId}`}
                         />
                         <Button
                           onClick={() =>
                             handleShareLinkCopy(
-                              `https://${location.hostname}/thread/${threadId}`
+                              `https://${location?.hostname}/thread/${threadId}`
                             )
                           }
                           title="Copy Post Url"
